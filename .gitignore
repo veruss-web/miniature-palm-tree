@@ -1,0 +1,23 @@
+# File besar
+*.zip
+*.mp4
+*.apk
+*.skill
+*.patch
+
+# Folder yang besar / tidak perlu di-track
+.aistudio/
+DMC4/
+OKX*/
+Telegram/
+Winlator*/
+_CommonRedist/
+supabase-backup/
+Rip/
+X/
+bot-*/
+mieflow*/
+iceflow*
+refactored-giggle-main/
+PERINTAH_AGENT_OKX*/
+PROMP CLAUDE OKX AI/

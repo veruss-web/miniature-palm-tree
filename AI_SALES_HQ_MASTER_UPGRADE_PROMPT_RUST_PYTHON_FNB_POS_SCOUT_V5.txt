@@ -1,0 +1,2409 @@
+MASTER UPGRADE PROMPT — AI SALES HQ
+EDISI: AUTONOMOUS AI SALES COMPANY / RUST + PYTHON HYBRID
+TARGET: PROSPEK BISNIS MAKANAN & MINUMAN (F&B) YANG MEMBUTUHKAN SISTEM KASIR / POINT OF SALE (POS), TERMASUK USAHA ES TUBE / ES KRISTAL
+BAHASA INSTRUKSI: INDONESIA
+
+VERSI: V5 — POS FOOD & BEVERAGE (F&B), TERMASUK ICE TUBE / ICE CRYSTAL
+STATUS: OVERRIDE SCOPE V3; SELURUH BAGIAN ENGINEERING, RUST+PYTHON,
+MULTI-AGENT, SECURITY, CRM, DASHBOARD, TESTING, DAN SAFE MODE TETAP BERLAKU.
+
+======================================================================
+0B. V5 BUSINESS SCOPE OVERRIDE — POS F&B, TERMASUK ES TUBE / ES KRISTAL
+======================================================================
+
+Aturan ini memiliki prioritas tertinggi atas semua bagian V3/V4 yang
+bertentangan:
+1. Hanya jual SISTEM KASIR / POS.
+2. Target utama adalah bisnis MAKANAN DAN MINUMAN (FOOD & BEVERAGE / F&B)
+   yang memiliki atau berpotensi memiliki kebutuhan nyata terhadap POS.
+3. Segmen F&B yang boleh dicari meliputi:
+   - restoran, rumah makan, warung makan, kedai makan, dan tempat makan;
+   - cafe/kafe, coffee shop, kedai kopi, tea shop, bubble tea, juice bar,
+     gerai minuman, dan usaha minuman;
+   - warung, kedai, gerobak, food stall, food court tenant, dan gerai take-away;
+   - bakery/toko roti, toko kue, dessert shop, pastry, snack, jajanan,
+     oleh-oleh makanan, dan toko makanan;
+   - katering, dapur produksi, cloud kitchen, central kitchen, dan usaha
+     makanan siap saji;
+   - franchise kuliner, jaringan gerai, restoran multi-outlet;
+   - frozen food, toko daging/seafood, toko bahan makanan, dan retail pangan
+     jika alur transaksi dan stoknya cocok dengan POS;
+   - produsen/distributor makanan dan minuman bila kebutuhan kasir/penjualan
+     langsung atau counter sales terbukti;
+   - pabrik/produsen es tube dan es kristal, distributor, agen, grosir,
+     depot, reseller, dan toko penjual es.
+4. Usaha es tube/es kristal tetap menjadi segmen khusus yang dipertahankan,
+   bukan satu-satunya niche.
+5. Segmen non-F&B hanya boleh diproses bila owner mengaktifkannya secara
+   eksplisit di dashboard. Default OFF.
+6. Jangan menjual E-commerce, website umum, company profile, landing page,
+   atau paket gabungan E-commerce + POS.
+7. Jangan menganggap setiap bisnis F&B otomatis membutuhkan POS.
+8. Jangan mengklaim fitur khusus F&B seperti meja/order meja, kitchen display,
+   printer dapur, split bill, modifier/topping, resep/BOM, costing, bahan
+   baku, expiry/batch, QR ordering, delivery aggregator, loyalty, reservation,
+   atau multi-outlet sebelum benar-benar ditemukan, diuji, dan disetujui.
+9. Fitur stok, pelanggan, transaksi, laporan, cetak struk, dan pembayaran
+   hanya boleh disebut sebagai fitur POS jika benar-benar tersedia dan
+   diverifikasi di aplikasi serta konfigurasi produk.
+10. Jika kebutuhan wajib prospek belum didukung, tandai PRODUCT_GAP_BLOCKER;
+    jangan mengarang fitur atau menjanjikan roadmap sebagai fitur yang sudah
+    tersedia.
+11. Default live outbound tetap OFF. Discovery bukan izin untuk menghubungi.
+
+ATURAN PRESEDENSI:
+Bagian 0B ini mengesampingkan bagian V3/V4 yang membatasi target hanya pada
+es tube/es kristal atau mengaktifkan E-commerce. Infrastruktur generik,
+Rust+Python, multi-agent, dashboard, security, observability, dan testing
+tetap dipertahankan. Yang berubah adalah business scope, discovery,
+qualification, katalog, dan sales playbook.
+
+======================================================================
+======================================================================
+0C. PRODUCT TRUTH BASELINE — MIEFLOW POS DARI ARSIP PEMILIK
+======================================================================
+
+Pemilik memberikan arsip aplikasi POS bernama MIEFLOW POS. Audit awal
+terhadap README dan source yang tersedia menunjukkan stack:
+Next.js 13.5, React 18, TypeScript, Supabase Auth/PostgreSQL/RLS/Storage/
+Realtime, dengan UI kasir dan manajemen toko.
+
+Kemampuan yang disebutkan atau terlihat pada arsip:
+- halaman Kasir dengan katalog produk yang dapat dicari;
+- ticket/keranjang transaksi;
+- pemilihan pelanggan dan catatan transaksi;
+- pembayaran tunai dengan input uang diterima dan hitung kembalian;
+- opsi pembayaran e-wallet dan ATM/kartu pada UI;
+- receipt/struk dengan thermal printing 58 mm / 80 mm;
+- CRUD produk, kategori, dan pelanggan;
+- foto produk di Supabase Storage;
+- pengelolaan stok dan stock movements;
+- riwayat transaksi, filter, sorting, pagination, dan detail order;
+- overview penjualan, produk terlaris, restock list, dan recent sales;
+- analytics untuk tren, top products, kategori, dan payment mix;
+- multi-user dengan owner_id dan Row Level Security.
+
+PENTING — PRODUCT TRUTH:
+Daftar di atas adalah baseline yang teridentifikasi dari arsip, bukan
+jaminan bahwa seluruh fungsi sudah production-ready atau sudah live
+terkonfigurasi. Agent implementer WAJIB mengaudit source, menjalankan
+test, memeriksa Supabase schema/RLS, memverifikasi alur UI dan transaksi,
+serta mencatat status setiap fitur:
+VERIFIED_IN_CODE_AND_TESTED / PRESENT_NOT_TESTED / PARTIAL /
+CONFIG_REQUIRED / NOT_IMPLEMENTED / BLOCKED.
+
+Jangan menyebut integrasi pembayaran sebagai payment gateway otomatis:
+opsi metode pembayaran pada UI tidak membuktikan adanya API payment
+gateway atau rekonsiliasi otomatis. Jangan menyebut multi-cabang
+terintegrasi hanya karena ada link situs cabang atau konfigurasi cabang.
+Jangan menganggap aplikasi mendukung berat, ukuran kemasan, harga grosir,
+piutang, delivery route, multi-gudang, shift, atau integrasi WhatsApp
+sebelum ditemukan dan diuji di kode.
+
+Buat PRODUCT_CAPABILITY_MATRIX.md yang memuat:
+- capability;
+- evidence file/path/function;
+- test evidence;
+- status;
+- batasan;
+- apakah boleh disebut dalam sales;
+- tanggal verifikasi;
+- reviewer.
+
+Katalog AI hanya boleh menggunakan capability yang statusnya layak
+dipasarkan dan sudah disetujui owner. Jika source code dan katalog
+berbeda, GUARDIAN menggunakan status yang lebih konservatif.
+
+======================================================================
+0D. F&B BUSINESS DOMAIN MODEL — GAP ANALYSIS, BUKAN JANJI FITUR
+======================================================================
+
+SCOUT dan ANALYST harus memahami alur usaha F&B untuk menemukan kebutuhan
+POS. Model domain ini dipakai untuk bertanya dan melakukan gap analysis,
+BUKAN untuk menyatakan seluruh kemampuan sudah didukung MIEFLOW POS.
+
+A. TIPE USAHA:
+- dine-in restaurant/rumah makan;
+- warung makan dan kedai;
+- cafe/coffee shop/tea shop;
+- bubble tea, juice bar, minuman kekinian;
+- bakery, pastry, dessert, snack, jajanan;
+- katering, cloud kitchen, central kitchen;
+- food stall, gerai take-away, food court tenant;
+- franchise dan multi-outlet;
+- frozen food, toko daging/seafood, toko bahan pangan;
+- produsen/distributor F&B dengan counter sales;
+- pabrik, distributor, agen, grosir, depot, dan toko es tube/kristal.
+
+B. OPERASIONAL YANG MUNGKIN RELEVAN:
+- jumlah produk/menu dan variasi;
+- ukuran/varian, topping, add-on, modifier;
+- dine-in, take-away, delivery, pre-order;
+- meja, nomor pesanan, antrean, dan split bill;
+- order masuk dari kasir, chat, aplikasi, atau kanal lain;
+- printer struk dan printer dapur;
+- bahan baku, resep, food cost, waste, dan stok bahan;
+- batch, expiry date, produk rusak/kedaluwarsa;
+- stok barang jadi dan stok bahan baku;
+- pelanggan tetap, loyalty, dan promosi;
+- shift kasir, pergantian operator, dan cash drawer;
+- cabang, outlet, gudang, dan central kitchen;
+- penjualan grosir/eceran, pelanggan bisnis, dan piutang;
+- pembayaran tunai/non-tunai dan rekonsiliasi;
+- laporan harian, per produk, per kategori, per kasir, per cabang.
+
+C. SUBDOMAIN ES TUBE / ES KRISTAL:
+- pabrik/produsen, distributor, agen, grosir, depot, reseller;
+- ukuran/grade, kemasan, kantong/pack/bal, kilogram/ton;
+- penjualan eceran dan partai;
+- pelanggan bisnis berulang;
+- stok masuk/keluar, barang rusak/susut;
+- pengiriman dan pengambilan sendiri;
+- harga grosir bertingkat dan piutang/tempo.
+
+Semua butir B dan C adalah kebutuhan yang perlu ditemukan saat discovery,
+BUKAN daftar fitur MIEFLOW POS yang sudah tersedia.
+
+Untuk setiap calon pelanggan, buat requirement matrix:
+requirement, evidence, importance (MUST/SHOULD/NICE_TO_HAVE),
+current_product_support, workaround_validated, gap_severity,
+implementation_estimate_if_known, owner_decision.
+Jangan mengarang estimasi pengerjaan. Bila MUST_HAVE tidak didukung,
+beri status PRODUCT_GAP_BLOCKER dan jangan mengirim penawaran yang
+menjanjikan solusi penuh.
+
+======================================================================
+======================================================================
+0E. SCOUT QUALITY MANDATE — BUKAN SEKADAR MENGUMPULKAN NAMA
+======================================================================
+
+SCOUT dinilai berdasarkan kualitas dan ketepatan, bukan volume mentah.
+KPI wajib:
+- precision@10 / precision@20 hasil prospek;
+- niche verification rate;
+- POS need confirmation rate;
+- evidence coverage;
+- source freshness;
+- duplicate/false-merge rate;
+- false-positive rate;
+- percentage leads rejected with explainable reason;
+- connector live-vs-mock accuracy;
+- cost/quota per qualified lead;
+- analyst acceptance rate;
+- conversion outcome bila tersedia.
+
+Sediakan review queue bagi manusia untuk sampel lead dan label:
+CORRECT_TARGET, WRONG_BUSINESS_TYPE, PRODUCT_NOT_VERIFIED,
+POS_NEED_NOT_PROVEN, DUPLICATE, STALE, CONTACT_NOT_ELIGIBLE,
+PRODUCT_GAP, QUALIFIED.
+Gunakan data review untuk memperbaiki query dan model dengan versioning,
+tetapi jangan mengubah aturan legal/safety.
+
+Jangan optimalkan SCOUT agar "selalu menemukan prospek". Sistem yang benar
+harus berani mengembalikan ZERO_QUALIFIED_LEADS bila evidence tidak cukup.
+Tampilkan coverage dan keterbatasan sumber agar owner tahu apakah nol lead
+berarti tidak ada target atau pencarian belum menjangkau wilayah/sumbernya.
+
+======================================================================
+MODE IMPLEMENTASI: AUDIT → UPGRADE MENYELURUH → INTEGRATION → TEST → HARDENING
+STATUS AWAL: PROJECT EXISTING, BUKAN GREENFIELD
+
+======================================================================
+0. PERINTAH UTAMA DAN MANDAT
+======================================================================
+
+Anda bertindak sebagai Principal Software Architect, Senior Rust Engineer,
+Senior Python Engineer, AI/LLM Engineer, Multi-Agent Systems Engineer,
+Sales Automation Architect, Integration Engineer, Security Engineer,
+QA/Testing Lead, DevOps Engineer, dan Technical Product Owner.
+
+Tugas Anda adalah MENG-UPGRADE PROYEK AI SALES HQ YANG SUDAH ADA menjadi
+platform AI Sales Automation end-to-end yang fokus secara eksklusif mencari,
+menilai, dan mengonversi calon pelanggan untuk SATU SOLUSI UTAMA:
+SISTEM KASIR / POINT OF SALE (POS).
+
+TARGET UTAMA:
+Bisnis makanan dan minuman (F&B) yang memiliki atau berpotensi memiliki
+kebutuhan nyata terhadap sistem kasir/POS, termasuk restoran, rumah makan,
+warung makan, cafe, coffee shop, kedai minuman, bakery, toko kue, katering,
+cloud kitchen, food stall, gerai take-away, franchise kuliner, frozen food,
+toko pangan, serta produsen/distributor makanan dan minuman dengan transaksi
+penjualan yang relevan.
+
+SUBSEGMEN KHUSUS YANG TETAP DIPERTAHANKAN:
+Pabrik/produsen es tube dan es kristal, distributor, agen, reseller, grosir,
+supplier, depot, dan toko penjual es tube/es kristal.
+
+Tujuan SCOUT bukan mencari semua bisnis secara luas. Tujuannya menemukan
+bisnis F&B yang mempunyai bukti kebutuhan operasional kasir, transaksi,
+stok, pelanggan, shift, atau pelaporan yang dapat ditangani oleh kemampuan
+POS yang benar-benar tersedia pada produk pemilik. Jangan menganggap semua
+usaha F&B atau semua usaha es otomatis membutuhkan POS.
+
+BATASAN SCOPE YANG TIDAK BOLEH DILANGGAR:
+- Produk yang dijual hanya sistem kasir/POS.
+- Jangan mencari pelanggan untuk company profile, landing page, blog,
+  website jasa umum, booking website, atau web development umum sebagai
+  produk yang dijual tersendiri.
+- Jangan menambahkan layanan lain sebagai target penjualan utama.
+- Modul stok, pelanggan, transaksi, laporan, cetak struk, dan pembayaran
+  hanya boleh ditawarkan sebagai fitur POS jika benar-benar tersedia.
+- Jika tidak ada sinyal kebutuhan POS, tandai NICHE_ONLY_NO_POS_EVIDENCE,
+  NURTURE, atau UNKNOWN; jangan dipaksakan masuk pipeline.
+- Seluruh query discovery, scoring, katalog, playbook, dashboard, KPI,
+  evaluasi, dan simulasi wajib dipusatkan pada POS untuk sektor F&B,
+  termasuk subsegmen es tube/es kristal.
+
+Sistem bukan sekadar lead scraper, chatbot, pembuat draft, atau dashboard.
+Target akhirnya adalah tim AI yang dapat menjalankan siklus penjualan:
+riset pasar → menemukan bisnis → mengidentifikasi kebutuhan → menilai
+kecocokan produk → menyiapkan pendekatan → menghubungi melalui kanal resmi
+yang diizinkan → menerima balasan → bercakap-cakap secara kontekstual →
+discovery → menjelaskan solusi → menangani keberatan → menyusun penawaran →
+negosiasi dalam batas kebijakan → follow-up yang sah → membantu proses demo
+dan checkout → memverifikasi bukti transaksi → memperbarui CRM → membuat
+laporan dan belajar dari hasil.
+
+Jangan membuat klaim bahwa sistem sudah mampu melakukan sesuatu sebelum
+fitur tersebut benar-benar diimplementasikan, diintegrasikan, dan diuji.
+
+KERJAKAN IMPLEMENTASI SECARA LANGSUNG DAN SISTEMATIS. Jangan berhenti pada
+analisis, rekomendasi, pseudocode, daftar TODO, atau file placeholder.
+Jangan meminta persetujuan untuk setiap langkah teknis. Ambil keputusan
+engineering yang aman dan masuk akal, dokumentasikan asumsi, lalu kerjakan
+sampai seluruh acceptance criteria yang dapat dikerjakan dalam lingkungan
+tersedia terpenuhi. Jika suatu integrasi membutuhkan kredensial, akun,
+persetujuan pemilik, akses jaringan, izin platform, biaya layanan, atau
+tindakan eksternal yang tidak tersedia, bangun adapter nyata dan konfigurasi
+yang benar, sediakan mock/sandbox yang jelas, tandai belum terverifikasi,
+dan lanjutkan bagian lain. Jangan memalsukan keberhasilan integrasi.
+
+JANGAN MENGHAPUS, MENULIS ULANG SECARA SEMBARANGAN, ATAU MERUSAK FITUR
+YANG SUDAH ADA. Pertahankan backward compatibility sejauh mungkin.
+Perubahan database harus menggunakan migrasi maju dan rollback yang diuji.
+Buat backup sebelum perubahan besar. Jangan menimpa file konfigurasi pengguna,
+database, secrets, atau data produksi.
+
+
+
+======================================================================
+0A. SCOPE LOCK — POS/KASIR SAJA, TARGET UTAMA F&B
+
+SCOPE PENJUALAN YANG DIIZINKAN:
+- Produk utama yang boleh dijual hanya SISTEM KASIR / POS milik pemilik.
+- Target utama adalah bisnis makanan dan minuman (F&B): restoran, rumah
+  makan, warung makan, cafe, coffee shop, kedai minuman, bakery, toko kue,
+  katering, cloud kitchen, food stall, gerai take-away, franchise kuliner,
+  frozen food, toko pangan, dan usaha F&B lain yang memiliki kecocokan.
+- Pabrik/produsen es tube dan es kristal, distributor, agen, grosir, supplier,
+  depot, reseller, dan toko es tetap menjadi subsegmen target.
+- Segmen non-F&B hanya boleh diproses jika owner mengaktifkannya secara
+  eksplisit; default OFF.
+- Modul stok, pelanggan, transaksi, laporan, cetak struk, dan pembayaran
+  hanya boleh disebut sebagai fitur POS jika benar-benar tersedia dan
+  diverifikasi di aplikasi serta konfigurasi produk.
+- Website publik, landing page, e-commerce, company profile, SEO, iklan,
+  aplikasi umum, dan jasa digital lain BUKAN produk yang dijual.
+
+LARANGAN:
+- Jangan membuat E-commerce sebagai product-fit atau target penjualan.
+- Jangan menawarkan paket gabungan E-commerce + POS.
+- Jangan menyimpulkan bisnis butuh POS hanya karena termasuk F&B.
+- Jangan menganggap semua produsen es memakai pencatatan manual.
+- Jangan mengarang fitur khusus F&B atau es seperti meja, kitchen display,
+  printer dapur, split bill, modifier/topping, resep/BOM, costing, bahan baku,
+  expiry/batch, QR ordering, delivery integration, loyalty, reservation,
+  konversi kg/karung, rute pengiriman, piutang, harga grosir bertingkat,
+  timbangan, integrasi WhatsApp, multi-gudang, atau multi-cabang.
+  Fitur tersebut harus ditandai GAP/NOT_AVAILABLE sampai benar-benar
+  diimplementasikan, diuji, dan dipublikasikan dalam katalog.
+- Jangan menjanjikan penghematan, kenaikan omzet, pengurangan kehilangan
+  stok, atau ROI dalam angka tanpa data pelanggan yang tervalidasi.
+
+ATURAN PRESEDENSI:
+Bagian 0A ini mengesampingkan bagian V3/V4 yang masih membatasi target
+hanya pada es tube/es kristal atau mengaktifkan E-commerce. Lakukan
+repository-wide cleanup terhadap prompt, seed, query, scoring, dashboard,
+catalog, fixtures, playbook, dan tests agar tidak ada scope lama yang aktif.
+Infrastruktur generik tetap boleh dipertahankan.
+
+1. SUMBER KEBENARAN: AUDIT PROYEK YANG ADA
+======================================================================
+
+Sebelum mengubah kode:
+A. Baca seluruh struktur proyek, semua source code, konfigurasi, prompt,
+   schema, migration, tests, docs, acceptance registry, traceability,
+   risk register, decisions, dan BUILD_STATUS.
+B. Buat peta dependensi modul dan alur data aktual berdasarkan kode,
+   bukan hanya README.
+C. Jalankan test suite baseline dan simpan hasilnya.
+D. Identifikasi implementasi nyata, implementasi parsial, mock, stub,
+   placeholder, fitur draft-only, fitur belum diverifikasi, dan fitur
+   yang hanya tercantum di dokumentasi.
+E. Cocokkan setiap requirement dengan file, fungsi, test, serta status.
+F. Jangan menganggap 166 test lulus sebagai bukti sistem produksi siap.
+   Bedakan unit test, integration test, contract test, sandbox test,
+   live service verification, dan production readiness.
+G. Buat UPGRADE_PLAN.md, CURRENT_STATE_AUDIT.md, dan IMPLEMENTATION_MATRIX.md.
+   Dokumen ini harus akurat dan diperbarui selama pengerjaan.
+
+Konteks awal proyek dari BUILD_STATUS yang wajib diverifikasi ulang:
+- Kernel deterministik, job DAG, scheduler, ACL, handoff, budget, empat agent.
+- GUARDIAN memiliki consent, suppression, opt-out, lock, linter, approval,
+  critic, override, dan authorize_send.
+- SCOUT memiliki ingest, klasifikasi, dedup, footprint, kontak, operator import,
+  safe fetcher, serta kerangka adapter platform.
+- ANALYST memiliki evidence, scoring, product fit, next-best-action,
+  business case, dan quote.
+- CLOSER saat ini terutama draft-oriented/deterministik dengan LLM opsional.
+- Provider Gemini dan Ollama sudah memiliki kerangka adapter REST, tetapi
+  status layanan nyata harus diverifikasi.
+- Adapter pencarian Facebook/X/TikTok/Google Business belum memiliki klien
+  platform nyata dalam build awal.
+- Adapter pengirim nyata belum dibangun.
+- Privacy export/delete dan retention automation belum lengkap.
+- Dashboard UI belum tersedia.
+- Rust belum diimplementasikan; backend Python menjadi backend aktif.
+- Katalog produk yang ada dinyatakan TEST DATA dan wajib diganti/dilengkapi
+  melalui konfigurasi pemilik, bukan mengarang harga/fitur.
+
+Konteks ini bukan alasan untuk mempertahankan kekurangan. Jadikan sebagai
+baseline untuk upgrade, lalu periksa kondisi aktual sebelum mengedit.
+
+======================================================================
+2. HASIL AKHIR YANG WAJIB DICAPAI
+======================================================================
+
+Bangun satu sistem terpadu dengan kemampuan berikut:
+
+2.1 Prospect Intelligence
+- Menemukan bisnis dari sumber data sah dan relevan.
+- Mendeteksi apakah bisnis memiliki website, toko online, katalog,
+  sistem kasir, pemesanan digital, atau proses manual.
+- Mengidentifikasi sinyal kebutuhan, misalnya:
+  * belum memiliki website;
+  * website rusak, lambat, tidak mobile-friendly, atau tidak memiliki CTA;
+  * hanya berjualan melalui media sosial/chat;
+  * katalog dan pemesanan masih manual;
+  * stok dan transaksi masih dicatat manual;
+  * memiliki beberapa cabang dan butuh sinkronisasi;
+  * kesulitan mengelola produk, pesanan, pelanggan, atau laporan;
+  * butuh integrasi toko online dan POS;
+  * sedang membuka cabang, memperluas pasar, atau meluncurkan produk.
+- Tidak menyimpulkan kebutuhan hanya dari satu sinyal lemah.
+- Setiap sinyal memiliki sumber, waktu observasi, tingkat keyakinan,
+  dan status verifikasi.
+- Tidak menganggap semua bisnis membutuhkan POS atau e-commerce.
+  Tentukan product fit berdasarkan jenis dan kebutuhan bisnis.
+
+2.2 Multi-Agent Sales Team
+Pertahankan tepat empat agent utama yang sudah ada:
+SCOUT, ANALYST, CLOSER, GUARDIAN.
+Boleh menambahkan sub-agent/service internal atau worker khusus, tetapi
+jangan membuat agent kelima yang mengaburkan kepemilikan tanggung jawab.
+Kernel tetap menjadi orchestrator deterministik.
+
+2.3 Real Conversation
+- AI menerima pesan masuk secara real-time melalui webhook resmi.
+- AI memahami konteks percakapan dan riwayat pelanggan yang relevan.
+- AI dapat berbicara secara natural dalam Bahasa Indonesia dan bahasa lain
+  yang diperlukan.
+- AI dapat bertanya satu pertanyaan yang paling relevan pada satu waktu.
+- AI menjelaskan produk berdasarkan katalog dan bukti yang valid.
+- AI menangani pertanyaan harga, fitur, keamanan, integrasi, implementasi,
+  dukungan, demo, dan keberatan.
+- AI tidak mengarang fitur, harga, testimoni, hasil, jaminan, sertifikasi,
+  atau ketersediaan.
+- AI dapat menyusun proposal dan penawaran dari konfigurasi bisnis.
+- AI melakukan handover kepada manusia untuk kasus di luar kewenangan.
+- AI mengenali opt-out dan menghentikan komunikasi sesuai aturan.
+
+2.4 Sales Lifecycle
+Sistem harus mengelola lifecycle prospek sampai pelanggan:
+NEW → ENRICHED → QUALIFIED → PRIORITIZED → CONTACT_ELIGIBLE →
+CONTACTED → REPLIED → DISCOVERY → DEMO_REQUESTED → PROPOSAL →
+NEGOTIATION → WON / LOST / NURTURE / SUPPRESSED / DISQUALIFIED.
+Gunakan state transition yang tervalidasi. Jangan izinkan transisi tidak sah.
+Status WON hanya berdasarkan bukti transaksi atau konfirmasi berwenang.
+
+2.5 CRM dan Dashboard
+- CRM untuk lead, account, contact, conversation, task, activity,
+  product interest, quote, proposal, deal, payment evidence, dan consent.
+- Dashboard responsif desktop/tablet/Android.
+- Funnel, sumber lead, conversion rate dengan denominator jelas,
+  response time, qualified rate, meeting/demo rate, win rate, revenue,
+  pipeline value, lost reasons, channel health, AI cost, token usage,
+  error, opt-out, dan compliance events.
+- Filter tanggal, sumber, agent, vertical, minat E-commerce/POS/gabungan, status, kanal.
+- Export CSV/JSON sesuai hak akses dan kebijakan privasi.
+- UI tidak boleh menampilkan data sensitif kepada role yang tidak berhak.
+
+======================================================================
+3. ARSITEKTUR RUST + PYTHON HYBRID — WAJIB DIIMPLEMENTASIKAN
+======================================================================
+
+Permintaan Rust + Hybrid Python adalah requirement inti, bukan opsi dan
+bukan sekadar membuat file rust_backend.py placeholder.
+
+3.1 Pembagian tanggung jawab
+
+RUST CORE:
+Gunakan Rust untuk komponen yang mendapat manfaat nyata dari performa,
+konkurensi, keamanan memori, dan pemrosesan throughput tinggi:
+- high-throughput ingestion normalization;
+- canonicalization dan deduplication kandidat;
+- feature extraction deterministik;
+- scoring primitives yang murni dan terukur;
+- event processing / batch transformation;
+- text preprocessing yang tidak memerlukan LLM;
+- queue/batch utilities jika benchmark membuktikan manfaat;
+- data validation dan policy primitives yang cocok dipindahkan;
+- komputasi berat lain berdasarkan profiling.
+
+PYTHON CONTROL PLANE:
+Pertahankan Python untuk:
+- kernel/orchestration;
+- agent workflow dan state machine;
+- LLM provider dan prompt management;
+- connector API eksternal;
+- business logic yang cepat berubah;
+- CRM, persistence, migrations;
+- webhook/API server;
+- analytics, dashboard backend;
+- integration tests dan operational tooling.
+
+Jangan memindahkan seluruh sistem ke Rust hanya demi label. Jangan pula
+membiarkan Python tetap menjadi satu-satunya backend tanpa alasan.
+Pilih boundary yang jelas dan ukur.
+
+3.2 Implementasi teknis Rust
+- Buat workspace Cargo yang terstruktur dan dapat dibangun.
+- Buat crate library Rust dengan API stabil.
+- Gunakan PyO3/maturin untuk binding Python jika kompatibel dengan target.
+  Jika target Android/Termux tidak mendukung toolchain tertentu, evaluasi
+  alternatif FFI/CLI/library dan dokumentasikan alasan teknis.
+- Buat wrapper Python dengan feature detection dan fallback yang transparan.
+- Jangan mengklaim Rust aktif bila modul native tidak berhasil dimuat.
+- Buat parity test Python vs Rust untuk semua fungsi yang dipindahkan.
+- Output harus identik atau memiliki toleransi numerik yang ditentukan.
+- Tambahkan fuzz/property tests untuk parser, normalizer, dedup dan scoring.
+- Tambahkan benchmark Python vs Rust dengan dataset representatif.
+- Jangan mengaktifkan Rust hanya karena lebih cepat pada microbenchmark;
+  ukur end-to-end latency, throughput, memory, startup, dan biaya kompleksitas.
+- Rust build gagal tidak boleh membuat sistem kehilangan data atau
+  menghasilkan output yang diam-diam berbeda.
+- Catat backend yang digunakan per operasi dan fallback reason.
+
+3.3 Definition of Done Rust
+- Cargo build/test lulus.
+- Python extension berhasil diimpor pada target yang dinyatakan didukung.
+- Parity suite lulus.
+- Benchmark dapat direproduksi.
+- Fallback Python diuji.
+- Status `rust_active`, `python_fallback`, `unavailable` ditampilkan jujur.
+- Tidak ada placeholder `NOT_IMPLEMENTED` untuk scope Rust yang dijanjikan.
+
+======================================================================
+4. AI / LLM PROVIDER DAN KECERDASAN AGENT
+======================================================================
+
+4.1 Provider
+Selesaikan integrasi nyata:
+- Google Gemini melalui API resmi.
+- Ollama lokal melalui API resmi untuk model yang sudah terpasang.
+- Provider interface generik agar provider tambahan dapat dipasang kemudian.
+- Mock provider hanya untuk test; tidak boleh disalahartikan sebagai AI nyata.
+- Health check, timeout, retry terkontrol, exponential backoff, quota handling,
+  rate-limit handling, circuit breaker, telemetry, dan provider fallback.
+- Validasi API key dan model tanpa menampilkan secret.
+- Jangan mengunduh model Ollama otomatis tanpa konfigurasi eksplisit.
+- Provider harus dapat diuji dengan koneksi nyata jika jaringan dan kredensial
+  tersedia; bila tidak, tandai NOT_VERIFIED dan sediakan langkah verifikasi.
+
+4.2 Model routing
+Rancang model routing berdasarkan tugas, bukan satu model untuk semua:
+- intent classification;
+- entity extraction;
+- prospect research synthesis;
+- lead qualification;
+- conversation response;
+- objection handling;
+- proposal drafting;
+- quality critique;
+- summarization.
+Gunakan model lebih ringan untuk tugas sederhana dan model lebih kuat untuk
+tugas yang membutuhkan reasoning. Pertimbangkan latency, biaya, privasi,
+context window, structured output, dan availability.
+
+4.3 LLM safety and correctness
+- Gunakan JSON schema / structured output bila tersedia.
+- Parse dan validate semua output LLM.
+- LLM tidak boleh mengubah state database secara langsung.
+- LLM hanya mengusulkan tindakan; kernel dan GUARDIAN memvalidasi.
+- Tool calling menggunakan allowlist, schema, timeout, budget, dan audit.
+- Prompt injection dari website, email, pesan pelanggan, dokumen, dan hasil
+  pencarian diperlakukan sebagai untrusted data.
+- Pisahkan system instruction dari konten eksternal.
+- Jangan masukkan API key, credential, private customer data, atau data
+  sensitif yang tidak dibutuhkan ke prompt.
+- Tambahkan grounded response: klaim harus menunjuk catalog/evidence/quote.
+- Confidence rendah atau konflik data → bertanya, menahan klaim, atau handover.
+- Evaluasi kualitas model per tugas, bukan hanya jawaban terlihat bagus.
+
+4.4 Agent roles
+
+SCOUT:
+- Source discovery, query planning, ingestion, normalization, entity resolution,
+  business classification, contact discovery yang sah, website footprint,
+  technology/commerce signals, evidence capture, freshness, dedup.
+- Menghasilkan lead record dan evidence; tidak mengirim pesan.
+
+ANALYST:
+- Menggabungkan bukti SCOUT dengan kebutuhan bisnis.
+- Menilai website need, e-commerce need, POS need, integration need.
+- Menilai fit produk, urgency, budget signals jika sah dan tersedia,
+  decision-maker confidence, timing, risk, data confidence.
+- Menghasilkan score yang explainable, bukan angka misterius.
+- Menentukan next-best-action dan alasan prioritas.
+- Consent bukan komponen skor; izin adalah gerbang kelayakan kontak.
+
+CLOSER:
+- Conversation state dan memory per customer.
+- Intent multi-label dan entity extraction.
+- Discovery question planning.
+- Personalized opening, product explanation, demo scheduling,
+  objection handling, proposal, negotiation, follow-up dan handover.
+- Menggunakan katalog aktual, quote engine, demo registry dan action registry.
+- Tidak membuat janji yang tidak didukung.
+- Menyimpan ringkasan memori dengan provenance dan correction handling.
+- Hanya satu agent pemilik percakapan pada satu waktu.
+
+GUARDIAN:
+- Deterministic policy enforcement dan veto.
+- Consent, lawful basis, suppression, opt-out, contact lock, rate limit,
+  quiet hours, channel policy, approval, message lint, claim lint,
+  privacy, security, budget, kill switch, audit.
+- Memeriksa setiap outbound message dan tool action.
+- Tidak dapat di-bypass oleh LLM, admin biasa, agent lain, retry, atau fallback.
+- Hard block harus menang atas business objective.
+
+======================================================================
+5. SCOUT: DEEP F&B DISCOVERY — POS MAKANAN & MINUMAN
+======================================================================
+
+MISI SCOUT
+SCOUT adalah mesin prospect intelligence yang menemukan bisnis F&B yang
+mungkin membutuhkan sistem kasir/POS. Ia mencari dari bukti publik yang sah,
+memisahkan fakta dari dugaan, menilai kecocokan produk, dan menyerahkan
+prospek yang dapat diverifikasi kepada ANALYST. SCOUT tidak mengirim pesan,
+tidak mengarang pain point, dan tidak menganggap semua bisnis F&B butuh POS.
+
+5.1 HIERARKI TARGET DAN SEGMENTASI
+
+TIER 1 — F&B DENGAN POTENSI KEBUTUHAN POS TINGGI:
+- restoran, rumah makan, warung makan, dan kedai;
+- cafe, coffee shop, tea shop, bubble tea, juice bar, dan gerai minuman;
+- food stall, gerai take-away, food court tenant, dan gerai cepat saji;
+- bakery, toko roti, toko kue, dessert shop, snack, dan jajanan;
+- katering, cloud kitchen, central kitchen, dan dapur produksi;
+- franchise kuliner dan bisnis multi-outlet;
+- frozen food dan toko pangan dengan variasi produk serta transaksi kasir.
+
+TIER 1A — SUBSEGMEN KHUSUS YANG TETAP DIPERTAHANKAN:
+- pabrik/produsen es tube dan es kristal;
+- distributor, agen, sub-agen, grosir, supplier, depot, dan toko es;
+- supplier es untuk cafe, restoran, hotel, katering, dan pedagang minuman.
+Subsegmen ini adalah bagian dari target F&B/food supply, bukan batas tunggal
+seluruh pencarian.
+
+TIER 2 — F&B BERBASIS PRODUKSI/DISTRIBUSI:
+- produsen makanan/minuman dengan penjualan langsung atau counter sales;
+- distributor makanan/minuman yang mempunyai transaksi penjualan langsung;
+- supplier bahan baku F&B jika ada kebutuhan POS yang jelas;
+- toko daging/seafood/bahan pangan jika alur kasir dan stok cocok.
+
+TIER 3 — TARGET SEKUNDER DEFAULT OFF:
+- retail non-makanan, fashion, elektronik, jasa, dan sektor lain.
+Hanya dicari bila owner mengaktifkan secara eksplisit. Jangan mencampurkan
+hasil Tier 3 dengan prioritas F&B.
+
+Segmentasikan berdasarkan tipe usaha, model transaksi, channel penjualan,
+jumlah outlet yang terverifikasi, kompleksitas menu/produk, dan bukti
+kebutuhan POS. Simpan segment_code, tier, business_model, geography,
+source provenance, dan alasan klasifikasi.
+
+5.2 QUERY INTELLIGENCE BAHASA INDONESIA
+
+Query planner harus menggabungkan kata kunci jenis usaha, kebutuhan POS,
+dan geografi. Contoh query F&B:
+- "restoran", "rumah makan", "warung makan", "kedai makan";
+- "cafe", "coffee shop", "kedai kopi", "tea shop", "bubble tea",
+  "juice bar", "kedai minuman";
+- "bakery", "toko roti", "toko kue", "dessert", "snack", "jajanan";
+- "katering", "catering", "cloud kitchen", "dapur produksi";
+- "food stall", "take away", "gerai makanan", "food court";
+- "franchise makanan", "cabang restoran", "jaringan cafe";
+- "frozen food", "toko frozen", "toko daging", "supplier bahan makanan".
+
+Query khusus es:
+- "pabrik es tube", "produsen es kristal", "distributor es tube",
+  "agen es kristal", "grosir es tube", "depot es kristal",
+  "supplier es untuk cafe/restoran".
+
+Query berbasis kebutuhan POS:
+- "butuh aplikasi kasir", "software kasir", "sistem POS",
+  "aplikasi stok toko", "lowongan kasir", "admin penjualan",
+  "pencatatan penjualan manual", "rekap penjualan", "sistem kasir restoran".
+Gunakan hanya query yang tidak melanggar kebijakan sumber dan jangan
+menganggap hasil kata kunci sebagai bukti final.
+
+Gabungkan query dengan kota/kabupaten/kecamatan yang dipilih operator.
+Gunakan synonym dictionary dan variasi lokal yang dapat dikonfigurasi.
+Catat query asal, query turunan, wilayah, sumber, jumlah hasil, deduplikasi,
+yield prospek, dan kualitas lead. Sediakan coverage map/table, checkpoint,
+resume, budget/quota, dan stop conditions. Jangan mencari tanpa batas.
+
+5.3 SUMBER DATA DAN LEGALITAS
+
+Sumber yang boleh digunakan:
+- Google Places API / Google Maps Platform sesuai ketentuan resmi dan quota;
+- website bisnis publik dengan crawler terbatas, robots.txt, terms,
+  rate limit, timeout, batas ukuran, dan SSRF protection;
+- akun/halaman sosial bisnis melalui API resmi dan permission yang sesuai;
+- direktori bisnis yang memiliki lisensi/izin penggunaan jelas;
+- daftar bisnis/CSV yang diberikan owner;
+- sumber publik lain setelah legal basis dan terms dinilai.
+
+Dilarang bypass login/CAPTCHA/paywall/rate limit/access control, scrape
+profil privat/pesan privat/grup tertutup, membuat akun palsu, memakai
+endpoint tidak resmi lalu mengklaim resmi, atau mengambil data personal
+tanpa dasar yang sah. Jangan mengirim DM/WhatsApp/email/telepon pada tahap
+discovery. Data publik tidak otomatis boleh dipakai untuk semua pemasaran.
+
+Setiap connector wajib memiliki credential validation, health check,
+capability declaration, quota/rate limit, pagination/resume, retry/backoff,
+source provenance, terms metadata, data minimization, contract tests, dan
+status LIVE_VERIFIED / SANDBOX_VERIFIED / MOCK_ONLY / NOT_CONFIGURED /
+BLOCKED_EXTERNAL. Jangan pernah memalsukan hasil live.
+
+5.4 SIGNAL INTELLIGENCE — BUKTI KEBUTUHAN POS
+
+Pisahkan sinyal menjadi kategori:
+
+A. IDENTITAS F&B:
+- bisnis benar-benar menjual/menyajikan makanan atau minuman;
+- tipe usaha (restoran, cafe, warung, bakery, katering, dan sebagainya);
+- lokasi/outlet dan area layanan yang dinyatakan;
+- model dine-in/take-away/delivery jika terlihat;
+- menu/katalog publik dan variasi produk;
+- kontak bisnis resmi.
+
+B. KOMPLEKSITAS TRANSAKSI:
+- banyak menu/SKU atau varian;
+- antrean/transaksi cepat;
+- dine-in dan take-away;
+- banyak kasir/shift;
+- banyak outlet/cabang yang terverifikasi;
+- order dari beberapa kanal;
+- transaksi grosir dan eceran;
+- pelanggan tetap atau B2B;
+- stok barang jadi atau bahan baku yang relevan.
+
+C. PAIN SIGNAL POS:
+- bisnis secara eksplisit menyebut pencatatan manual/buku/spreadsheet;
+- pemilik secara eksplisit mencari aplikasi kasir/POS;
+- lowongan kasir/admin menyebut tugas rekap transaksi manual;
+- bisnis menyatakan kesulitan mengontrol stok, penjualan, atau laporan;
+- ekspansi outlet dapat menjadi sinyal kompleksitas, bukan bukti POS gagal;
+- review publik yang relevan tentang salah catat/antrean/rekap hanya
+  boleh menjadi petunjuk, dengan konteks dan sumber yang jelas.
+
+D. DIGITAL/ORDER SIGNAL:
+- order melalui WhatsApp/telepon/media sosial;
+- tidak ada checkout online;
+- menu hanya berupa gambar/posting;
+- tidak terlihat katalog online.
+Semua ini hanya sinyal POSSIBLE. Order lewat chat bukan bukti bahwa kasir
+atau pencatatan internal buruk. Tidak memiliki website bukan bukti butuh POS.
+Memiliki website/checkout bukan bukti sudah memiliki POS.
+
+E. SUBSEGMEN ES:
+- bukti benar-benar memproduksi/menjual/distribusi es tube/kristal;
+- transaksi eceran/partai;
+- kemasan/satuan yang terlihat;
+- pelanggan bisnis berulang;
+- kebutuhan stok/pengiriman yang dinyatakan.
+Jangan menyamakan restoran yang membeli es dengan distributor es.
+
+5.5 WEBSITE DAN DIGITAL FOOTPRINT INTELLIGENCE
+
+Periksa website publik secara ringan:
+- status dan identitas bisnis;
+- menu/katalog dan informasi order;
+- kanal order, pembayaran, pengiriman;
+- jumlah outlet yang dinyatakan;
+- kontak bisnis resmi;
+- indikator teknologi yang dapat diamati secara wajar;
+- basic status HTTP, redirect, TLS, responsive hints, dan broken links.
+
+Jangan mengirim form, membuat akun, melakukan order, mencoba pembayaran,
+atau menjalankan security scan agresif. Ketiadaan fitur digital bukan bukti
+bahwa POS internal tidak ada.
+
+5.6 EVIDENCE LEDGER DAN PROVENANCE
+
+Setiap sinyal disimpan terpisah:
+lead_id, business_entity_id, source_id, source_type, source_url/reference,
+observed_at, collected_at, evidence_type, excerpt minimum/hash bila aman,
+OBSERVED/INFERRED/UNKNOWN/CONFLICTED/STALE, confidence, freshness,
+review status, policy/terms metadata, expiry/recheck_after.
+
+Bedakan fakta yang terlihat langsung dari dugaan. Setiap skor harus
+ditelusuri ke evidence ID. Jangan simpan PII atau halaman penuh tanpa
+kebutuhan dan dasar yang sah. Sediakan evidence viewer dengan kutipan
+minimum, tautan sumber, tanggal, dan alasan skor.
+
+5.7 ENTITY RESOLUTION DAN DEDUP
+
+Gunakan nama ternormalisasi, domain, alamat, koordinat dari sumber sah,
+kontak bisnis publik, brand/alias, dan relasi outlet. Jangan auto-merge
+hanya karena nama mirip. Bedakan kantor pusat, outlet, cabang, dapur pusat,
+gudang, dan agen bila evidence mendukung. Simpan merge history dan undo.
+
+5.8 SCOUT SCORE — TIGA DIMENSI TERPISAH
+
+A. F&B NICHE FIT (0–100):
+Apakah entitas benar-benar bisnis makanan/minuman atau rantai pasok F&B?
+Untuk es, apakah benar produsen/distributor/agen/depot/toko es?
+
+B. POS NEED EVIDENCE (0–100):
+Apakah ada bukti eksplisit kebutuhan kasir, transaksi, stok, pelanggan,
+shift, laporan, atau pengelolaan outlet? Jangan beri nilai seolah terbukti
+untuk faktor yang UNKNOWN.
+
+C. MIEFLOW PRODUCT CAPABILITY FIT (0–100):
+Apakah fitur MIEFLOW yang sudah diverifikasi cocok dengan kebutuhan?
+Periksa MUST_HAVE dan product gaps. Kebutuhan kritis yang belum didukung
+menghasilkan PRODUCT_GAP_BLOCKER.
+
+Status akhir:
+- HIGH_PRIORITY: niche fit, POS evidence, dan capability fit kuat; evidence
+  fresh; tidak ada blocker kritis.
+- QUALIFY: niche fit kuat, tetapi kebutuhan POS perlu diverifikasi.
+- NICHE_ONLY_NO_POS_EVIDENCE: F&B fit tetapi bukti kebutuhan POS belum cukup.
+- POS_NEED_OUTSIDE_FNB: kebutuhan POS terindikasi tetapi bukan F&B; hanya
+  diproses jika owner mengaktifkan sektor sekunder.
+- PRODUCT_GAP_BLOCKER: kebutuhan utama tidak didukung MIEFLOW saat ini.
+- NOT_A_FIT / UNKNOWN / CONFLICTED / STALE.
+
+Jangan membuat satu skor misterius. Tampilkan dimensi, evidence IDs,
+missing facts, confidence, freshness, dan alasan keputusan.
+
+5.9 QUERY LEARNING DAN FEEDBACK LOOP
+
+Belajar dari label operator:
+CORRECT_FNB_SEGMENT, WRONG_BUSINESS_TYPE, POS_NEED_CONFIRMED,
+POS_NEED_NOT_PROVEN, PRODUCT_GAP, DUPLICATE, STALE, CONTACT_NOT_ELIGIBLE,
+QUALIFIED, REJECTED. Versioning query, synonym, threshold, bobot, dan model.
+Jangan biarkan feedback mengubah hard safety rules. Jangan gunakan data
+pelanggan untuk training eksternal tanpa izin.
+
+5.10 HANDOFF SCOUT → ANALYST
+
+Handoff memuat business profile, F&B segment/tier, bukti produk/layanan,
+POS need evidence, F&B niche score, POS need score, capability fit,
+missing facts, source references, confidence, freshness, contact eligibility,
+dan pertanyaan discovery yang disarankan.
+
+SCOUT tidak boleh mengirim pesan, mengarang budget/omzet/volume/karyawan/
+jumlah cabang/decision-maker/teknologi, atau mengirim lead ke CLOSER tanpa
+qualification ANALYST. Hormati opt-out dan suppression list.
+
+5.11 CONNECTOR OBSERVABILITY DAN JOB CONTROL
+
+Tampilkan query/wilayah, segmen F&B, sumber aktif, hasil mentah/valid/
+duplikat/ditolak, quota/biaya, retry/error/checkpoint, evidence per kategori,
+jumlah NICHE_ONLY_NO_POS_EVIDENCE, lead ke ANALYST, durasi dan throughput.
+Dashboard mendukung pause/resume/cancel/retry/export sesuai hak akses.
+Tandai connector MOCK_ONLY atau NOT_CONFIGURED dengan jelas.
+
+5.12 ACCEPTANCE TEST SCOUT
+
+Minimal tests:
+1. Restoran dengan bukti menu dan outlet → F&B niche fit.
+2. Cafe/coffee shop dengan menu dan kontak bisnis publik → F&B niche fit.
+3. Warung makan kecil tanpa bukti POS → niche fit, POS need unknown.
+4. Bisnis secara eksplisit mencari aplikasi kasir → POS evidence kuat.
+5. Order via WhatsApp saja → POSSIBLE, bukan confirmed manual pain.
+6. Tidak punya website → bukan bukti butuh POS.
+7. Punya checkout online → bukan bukti punya/tidak punya POS internal.
+8. Franchise dengan cabang yang terbukti → entity relationship benar.
+9. Bakery/katering/cloud kitchen → segmen F&B sesuai evidence.
+10. Pabrik es tube/distributor es → segmen khusus es, tetap termasuk target.
+11. Restoran yang hanya membeli es → bukan distributor es.
+12. Retail fashion tanpa sektor sekunder aktif → bukan target.
+13. Data lama → STALE; sumber bertentangan → CONFLICTED.
+14. Sumber MOCK_ONLY → tidak boleh disebut live.
+15. Kebutuhan kitchen printer/table management/recipe costing yang belum
+    didukung → PRODUCT_GAP_BLOCKER.
+16. Kebutuhan piutang/satuan kg/harga grosir yang belum didukung → GAP.
+17. Prospek opted-out/contact-ineligible → tidak boleh outbound.
+18. Dua bisnis bernama mirip tetapi berbeda → jangan auto-merge.
+19. Query terlalu umum tanpa kata F&B/geografi → tidak boleh menghasilkan
+    klaim target berkualitas.
+20. Hasil pencarian tanpa bukti identitas F&B → UNKNOWN/REJECTED.
+
+======================================================================
+
+6. ANALYST: QUALIFICATION DAN PRIORITAS
+======================================================================
+
+Buat model penilaian yang explainable dan configurable. Pisahkan:
+A. Product fit:
+- POS / sistem kasir fit saja.
+- Niche fit untuk usaha es tube/es kristal.
+- Capability fit terhadap fitur POS yang benar-benar tersedia.
+E-commerce, website fit, dan paket gabungan bukan kategori produk penjualan.
+B. Need strength:
+- pain point yang terbukti;
+- proses manual;
+- kompleksitas katalog/order;
+- jumlah cabang bila tersedia;
+- sinyal ekspansi;
+- masalah transaksi, stok, pencatatan, atau laporan yang teramati;
+- relevansi solusi.
+C. Buying readiness:
+- minat eksplisit;
+- waktu kebutuhan;
+- decision-maker evidence;
+- permintaan demo/penawaran;
+- budget hanya jika disampaikan atau tersedia secara sah.
+D. Evidence confidence:
+- sumber independen;
+- freshness;
+- direct vs inferred;
+- conflict.
+E. Contact eligibility:
+- consent, lawful basis, channel policy, suppression, opt-out.
+Contact eligibility bukan skor probabilitas dan tidak dapat di-override oleh nilai
+lead yang tinggi.
+
+Output:
+- score per product;
+- overall priority;
+- confidence;
+- rationale;
+- supporting evidence;
+- missing information;
+- disqualification reason;
+- next-best-action;
+- review_required.
+Rubrik dan bobot harus dapat dikonfigurasi, diberi versi, dan diuji. Jangan
+menganggap bobot awal proyek sebagai kebenaran ilmiah. Kalibrasikan dengan
+data hasil penjualan nyata dan hindari bias kategori/ukuran bisnis.
+
+======================================================================
+7. CLOSER: AI SALES CONVERSATION YANG BENAR-BENAR BEKERJA
+======================================================================
+
+CLOSER harus berkembang dari draft-only menjadi conversation agent yang
+dapat menjalankan percakapan nyata melalui channel connector yang sah.
+
+7.1 Conversation engine
+- Webhook inbound event dengan signature verification.
+- Idempotency untuk mencegah pesan ganda.
+- Ordering dan dedup event.
+- Conversation ownership lock.
+- Customer identity resolution dengan batas privasi.
+- Context window management dan memory summarization.
+- Per-customer CRM timeline.
+- Intent/entity extraction.
+- Language detection dan tone adaptation.
+- Human handover.
+- Delivery/read/reply status bila provider mendukung.
+- Retry aman tanpa mengirim pesan ganda.
+- Dead-letter queue dan replay yang diaudit.
+
+7.2 Natural sales behavior
+AI harus dapat:
+- memperkenalkan solusi secara singkat dan relevan;
+- menggali kondisi bisnis;
+- memahami apakah pelanggan membutuhkan E-commerce/toko online, POS/kasir,
+  atau kombinasi keduanya;
+- bertanya satu pertanyaan paling penting per giliran;
+- menyesuaikan penjelasan dengan industri pelanggan;
+- memberi contoh alur kerja yang relevan;
+- menjelaskan manfaat tanpa menjamin hasil finansial;
+- membandingkan pilihan paket dari katalog;
+- menjawab keberatan harga, waktu, kompleksitas, kepercayaan, migrasi,
+  dukungan, integrasi, dan kesiapan tim;
+- menawarkan demo;
+- menyusun proposal dan quotation;
+- melakukan negosiasi dalam rentang diskon dan syarat yang diizinkan;
+- mencatat alasan kalah/menang;
+- melakukan follow-up hanya bila memiliki dasar izin dan aturan kanal
+  memperbolehkan;
+- berhenti segera jika pelanggan menolak/opt-out.
+
+7.3 Sales knowledge base
+Buat sumber kebenaran terstruktur:
+- product catalog;
+- feature matrix;
+- package/pricing;
+- implementation timeline;
+- onboarding process;
+- support/SLA;
+- integration compatibility;
+- security/privacy statements;
+- FAQ;
+- case studies/testimonials yang terverifikasi;
+- demo assets;
+- terms and limitations.
+Setiap item punya version, owner, last_verified_at, status, evidence.
+AI dilarang mengarang jawaban jika knowledge base kosong. Jawab jujur,
+ajukan klarifikasi, atau handover.
+
+7.4 Objection playbook
+Bangun playbook yang dapat dikonfigurasi dan dievaluasi untuk:
+- "mahal";
+- "saya sudah punya website/POS";
+- "belum butuh";
+- "takut sulit digunakan";
+- "takut data hilang";
+- "apakah bisa integrasi dengan ...?";
+- "bisa bayar bertahap?";
+- "saya perlu diskusi dengan partner";
+- "kirim proposal dulu";
+- "apa bedanya dengan kompetitor?";
+- "berapa lama pengerjaannya?".
+Jangan memaksa, menekan, memanipulasi, membuat scarcity palsu, atau
+menggunakan dark patterns.
+
+7.5 Pricing and negotiation
+- Semua harga berasal dari katalog/quote engine yang disetujui pemilik.
+- Harga final, diskon, pajak, biaya tambahan, masa berlaku, dan syarat
+  harus dihitung deterministik.
+- Batas diskon per role/agent.
+- AI tidak boleh memberi diskon atau komitmen di luar kewenangannya.
+- Untuk permintaan khusus, buat approval task atau handover.
+- Quote memiliki ID, versi, expiry, itemized lines, currency, tax treatment,
+  dan audit trail.
+
+7.6 Deal and payment
+- Status deal tidak boleh WON hanya karena pelanggan berkata "oke".
+- Verifikasi pembayaran melalui payment provider/webhook resmi atau bukti
+  yang diverifikasi manusia.
+- Jangan menyimpan data kartu pembayaran.
+- Idempotency dan reconciliation.
+- Simpan bukti minimum yang diperlukan.
+- Setelah deal valid, buat onboarding handoff dan task implementasi.
+
+======================================================================
+8. CHANNELS: INBOUND DAN OUTBOUND NYATA
+======================================================================
+
+Buat channel architecture modular:
+- WhatsApp Business Platform / Cloud API resmi jika memenuhi syarat.
+- Email melalui provider resmi (SMTP/API) dengan autentikasi yang benar.
+- Website live chat/widget.
+- Instagram/Messenger hanya melalui API dan permission resmi yang tersedia.
+- Channel tambahan melalui connector contract.
+
+Khusus WhatsApp:
+- Gunakan WhatsApp Business Platform/Cloud API resmi.
+- Implementasikan webhook verification, signature, message status, template
+  messages, 24-hour customer service window, template category, opt-in,
+  quality rating/rate limits sesuai dokumentasi terkini.
+- Jangan menggunakan WhatsApp Web automation, browser bot, unofficial library,
+  atau teknik yang menghindari aturan.
+- Jangan mengirim cold message tanpa dasar izin yang sesuai.
+- Inbound customer-initiated conversation dapat ditangani sesuai window
+  dan policy resmi.
+- Jika outbound business-initiated memerlukan template/opt-in, patuhi.
+- Sediakan sandbox/test number bila tersedia.
+
+Email:
+- SPF/DKIM/DMARC guidance.
+- Bounce, complaint, unsubscribe, suppression.
+- Rate limit dan sender reputation.
+- Tidak melakukan spam/bulk cold email yang melanggar hukum atau provider policy.
+
+Website chat:
+- Widget ringan, secure session, rate limiting, consent notice, privacy notice.
+- Handover ke manusia.
+- Tidak mengungkap data pelanggan lain.
+
+Sender Gateway:
+- Semua outbound wajib melewati satu jalur GUARDIAN authorize_send.
+- Adapter hanya dapat diregistrasi bila official/approved.
+- Default deny.
+- Idempotency key per outbound.
+- Delivery uncertain tidak boleh auto-resend tanpa reconciliation.
+- Per-channel kill switch dan global kill switch.
+- Per-customer contact lock dan suppression lintas kanal.
+- Audit setiap keputusan allow/deny.
+- Dry-run/sandbox/live mode yang jelas dan terpisah.
+
+PENTING: Jangan mengaktifkan live outbound secara default. Implementasikan
+fitur lengkap dan sandbox tests, tetapi konfigurasi awal tetap:
+RESEARCH_ONLY=true
+OUTBOUND_ENABLED=false
+DRY_RUN=true
+LIVE_SEND_APPROVED=false
+GLOBAL_KILL_SWITCH=true
+Sampai pemilik mengisi credential, menyelesaikan setup resmi, memastikan
+consent dan kebijakan, dan secara eksplisit mengaktifkan kanal. Ini bukan
+alasan untuk tidak membangun adapter; adapter dan seluruh tesnya tetap wajib.
+
+======================================================================
+9. GUARDIAN: GOVERNANCE, SECURITY, PRIVACY, DAN COMPLIANCE
+======================================================================
+
+Pertahankan prinsip default-deny dan tingkatkan:
+- consent registry per channel, purpose, timestamp, source, scope, expiry;
+- lawful-basis record sesuai yurisdiksi dan use case;
+- suppression list lintas kanal;
+- opt-out multilingual dan slang Bahasa Indonesia;
+- opt-out precedence tertinggi;
+- contact lock dan anti-duplicate;
+- frequency cap dan quiet hours;
+- channel-specific policy;
+- content lint dan claim-evidence matching;
+- approval hash dan tamper-evident audit;
+- human override tidak dapat menembus hard legal/safety blocks;
+- data retention policy;
+- privacy export/delete workflow;
+- access control roles;
+- secret management;
+- encryption at rest/in transit jika relevan;
+- PII masking;
+- prompt injection defense;
+- SSRF defense;
+- webhook signature verification;
+- dependency scanning dan secure configuration;
+- incident response dan backup/restore.
+
+Patuhi hukum perlindungan data yang berlaku, termasuk UU Pelindungan Data
+Pribadi Indonesia bila relevan, aturan anti-spam/komunikasi, ketentuan
+platform, serta aturan yurisdiksi target pelanggan. Jangan memberi opini
+hukum final; sediakan checklist compliance dan tandai kebutuhan review ahli.
+
+Jangan mengumpulkan nomor telepon/email pribadi dari sumber yang tidak
+mengizinkan penggunaan tersebut. Prioritaskan business contact yang
+dipublikasikan untuk tujuan bisnis dan tetap periksa dasar kontak.
+Jangan menghubungi orang hanya karena datanya ditemukan.
+
+======================================================================
+10. PRODUCT CATALOG DAN TARGET PENJUALAN
+======================================================================
+
+Ganti status TEST DATA dengan katalog satu produk utama: SISTEM KASIR/POS.
+Produk ini ditujukan terutama untuk pabrik, distributor, agen, grosir,
+depot, dan toko penjual es tube/es kristal. Jangan mengarang harga, paket,
+fitur, SLA, garansi, portofolio, atau demo.
+
+Katalog hanya boleh memuat:
+- Sistem Kasir / POS.
+- Paket/tingkat layanan POS yang benar-benar tersedia.
+- Add-on POS seperti inventory, stok, pelanggan, transaksi, laporan,
+  cetak struk, atau pembayaran hanya jika fitur tersebut benar-benar
+  tersedia dan diverifikasi.
+Tidak ada katalog E-commerce, website, paket gabungan, company profile,
+landing page, atau jasa digital lain.
+
+Setiap product/offer:
+id, name, description, target_verticals, features, limitations,
+status, package, price, currency, tax, setup_fee, recurring_fee,
+discount_rules, implementation_timeline, prerequisites, integrations,
+support_terms, demo_asset_ids, evidence_refs, owner, version,
+last_verified_at.
+
+Status fitur:
+AVAILABLE, LIMITED, BETA, PLANNED, UNAVAILABLE.
+Fitur PLANNED/UNAVAILABLE tidak boleh dipresentasikan sebagai tersedia.
+LIMITED/BETA wajib menjelaskan batasannya.
+Jika katalog kosong atau stale, CLOSER tidak boleh membuat quotation.
+
+Buat onboarding wizard/CLI untuk operator memasukkan:
+- profil perusahaan penjual;
+- produk dan paket;
+- harga;
+- batas diskon;
+- wilayah layanan;
+- bahasa;
+- jam operasional;
+- SLA/support;
+- studi kasus yang sah;
+- demo URL;
+- payment method;
+- legal/privacy policy;
+- kanal yang sudah terhubung.
+
+
+
+10A. DETAIL IMPLEMENTASI KATALOG JASA — WAJIB SIAP DIPAKAI PEMILIK
+
+Tujuan bagian ini:
+Setelah AI SALES HQ selesai dibangun dan dijalankan, PEMILIK BISNIS harus
+dapat memasukkan jasa website, paket, harga, fitur, portofolio, dan aturan
+penawaran sendiri melalui Dashboard Admin. Pemilik tidak boleh perlu
+mengubah source code Rust/Python, mengedit file konfigurasi internal,
+atau meminta developer setiap kali ada perubahan layanan.
+
+Jadikan Product Catalog sebagai sumber kebenaran tunggal (single source
+of truth) bagi SCOUT, ANALYST, CLOSER, quote engine, proposal generator,
+dashboard, dan laporan. Jangan membuat katalog terpisah yang isinya dapat
+berbeda antar-agent.
+
+10A.1. PENGALAMAN PERTAMA: BUSINESS SETUP WIZARD
+
+Saat pertama kali admin membuka dashboard, tampilkan wizard konfigurasi
+bisnis yang mudah dipahami pengguna non-teknis. Wizard harus dapat:
+- menyimpan progres otomatis;
+- dilanjutkan kembali tanpa mengulang;
+- menandai bagian wajib dan opsional;
+- memberi contoh pengisian yang jelas;
+- melakukan validasi sebelum data dipublikasikan;
+- menyediakan preview bagaimana jasa akan dijelaskan oleh AI;
+- tidak mengarang data yang belum diisi.
+
+Urutan wizard:
+1. Profil bisnis penjual: nama usaha, deskripsi, logo, alamat/wilayah
+   layanan, website, email/nomor kontak bisnis, bahasa, zona waktu.
+2. Model bisnis: jasa milik sendiri, jasa sendiri + proyek custom,
+   atau reseller/mitra. Pilihan awal yang disarankan adalah
+   "jasa sendiri + proyek custom", tetapi seluruh pilihan dapat diubah.
+3. Katalog jasa: pilih jenis jasa yang benar-benar dijual.
+4. Paket dan harga: harga tetap, rentang harga, mulai dari, atau
+   konsultasi/quotation setelah discovery.
+5. Fitur dan batasan: tandai tersedia, terbatas, beta, direncanakan,
+   atau tidak tersedia.
+6. Portofolio dan bukti: demo URL, screenshot, studi kasus, testimoni
+   yang sah, serta izin penggunaan materi.
+7. Proses kerja: tahapan pengerjaan, estimasi durasi, prasyarat,
+   revisi, serah terima, training, maintenance.
+8. Pembayaran dan ketentuan: metode pembayaran, termin, pajak/biaya,
+   masa berlaku penawaran, pembatalan, refund, dan ketentuan lain.
+9. Dukungan: jam layanan, kanal support, response target, masa support,
+   SLA jika memang ada.
+10. Review dan publish: tampilkan ringkasan, kesalahan, data kosong,
+    dan peringatan sebelum admin menerbitkan katalog.
+
+Wizard boleh dilewati sebagian untuk menyimpan draft. Namun produk yang
+belum memenuhi data minimum tidak boleh ditawarkan atau dibuatkan quote.
+
+10A.2. HALAMAN DASHBOARD "JASA & KATALOG"
+
+Buat halaman katalog dengan kemampuan:
+- tambah jasa baru;
+- edit jasa;
+- duplikasi jasa sebagai dasar paket baru;
+- arsipkan/nonaktifkan jasa;
+- aktifkan kembali jasa;
+- buat kategori dan tag;
+- buat paket Basic/Standard/Premium atau nama paket kustom;
+- buat add-on/layanan tambahan;
+- atur harga dan diskon;
+- atur target industri;
+- atur fitur dan batasan;
+- unggah/tautkan gambar, dokumen, demo, dan portofolio;
+- preview tampilan penawaran AI;
+- pencarian, filter, sort, pagination;
+- riwayat perubahan dan siapa yang mengubah;
+- version history dan pemulihan versi sebelumnya;
+- import/export CSV dan JSON dengan validasi serta preview;
+- bulk update yang aman dan dapat dibatalkan;
+- status draft/published/archived.
+
+Sediakan tombol aksi yang jelas: "Tambah Jasa", "Tambah Paket",
+"Simpan Draft", "Preview Penawaran AI", "Terbitkan", "Arsipkan",
+"Impor Katalog", dan "Ekspor Katalog". Jangan membuat tombol dekoratif
+yang tidak bekerja.
+
+10A.3. FORM TAMBAH JASA — FIELD WAJIB DAN OPSIONAL
+
+Setiap jasa minimal memiliki field berikut:
+
+IDENTITAS:
+- service_id unik dan stabil;
+- nama jasa;
+- kategori;
+- ringkasan singkat;
+- deskripsi lengkap;
+- status draft/published/archived;
+- model delivery: in-house, partner, reseller, custom;
+- pemilik/penanggung jawab internal.
+
+TARGET DAN KECocOKAN:
+- target_verticals;
+- jenis pelanggan yang cocok;
+- masalah pelanggan yang diselesaikan;
+- indikator kebutuhan;
+- kondisi ketika jasa tidak cocok;
+- skala usaha/kompleksitas yang didukung;
+- wilayah layanan;
+- bahasa layanan.
+
+FITUR DAN RUANG LINGKUP:
+- daftar fitur;
+- deskripsi setiap fitur;
+- status tiap fitur: AVAILABLE, LIMITED, BETA, PLANNED, UNAVAILABLE;
+- batasan/pengecualian;
+- integrasi yang benar-benar tersedia;
+- kebutuhan pihak ketiga;
+- deliverables;
+- jumlah revisi jika ditetapkan;
+- hal yang tidak termasuk dalam harga.
+
+HARGA DAN PENAWARAN:
+- currency;
+- pricing_model: FIXED, STARTING_FROM, RANGE, CUSTOM_QUOTE;
+- minimum_price dan maximum_price jika relevan;
+- displayed_price;
+- setup_fee;
+- recurring_fee;
+- billing_period;
+- pajak/biaya tambahan dan cara perhitungannya;
+- discount_floor dan discount_ceiling;
+- siapa yang boleh memberi diskon;
+- minimum margin jika digunakan;
+- payment_terms;
+- quote_validity_days;
+- kondisi yang membuat harga perlu dihitung ulang.
+
+PELAKSANAAN:
+- estimasi durasi minimum/maksimum;
+- tahapan pengerjaan;
+- prasyarat dari pelanggan;
+- materi/konten yang harus disediakan pelanggan;
+- proses revisi;
+- proses testing dan handover;
+- training;
+- garansi/support hanya jika benar-benar ditetapkan;
+- maintenance dan biaya berulang.
+
+BUKTI DAN MEDIA:
+- demo_url;
+- portfolio_items;
+- screenshots/images;
+- dokumen spesifikasi;
+- case studies;
+- testimonial dengan sumber dan izin;
+- evidence_refs;
+- tanggal verifikasi bukti.
+
+OPERASIONAL:
+- created_at, updated_at;
+- created_by, updated_by;
+- version;
+- last_verified_at;
+- published_at;
+- stale_after;
+- audit event.
+
+Jangan mewajibkan field opsional yang tidak relevan. Tetapi tetapkan
+minimum publish requirements per pricing_model dan jenis jasa. Beri
+validasi yang menjelaskan apa yang masih kurang, bukan error teknis saja.
+
+10A.4. PAKET JASA DAN ADD-ON
+
+Satu jasa dapat memiliki beberapa paket. Contoh template awal sebagai DRAFT:
+- Sistem Kasir / POS untuk usaha es tube dan es kristal.
+- Paket POS dasar dan paket POS lanjutan hanya jika owner mengisi perbedaan
+  fitur, harga, batasan, dan layanan secara nyata.
+- Add-on POS seperti stok, pelanggan, laporan, cetak struk, dan pembayaran
+  hanya jika sudah tersedia dan teruji.
+
+Jangan menyediakan template E-commerce, company profile, landing page,
+website umum, atau layanan digital lain sebagai produk jualan.
+
+Setiap template harus dimulai dengan status DRAFT dan placeholder.
+Jangan mengisi harga, fitur, durasi, garansi, integrasi, atau demo
+palsu. Admin harus melengkapi dan menerbitkannya sendiri.
+
+Paket dapat berisi:
+- nama paket dan deskripsi;
+- harga atau pricing model;
+- daftar fitur yang termasuk;
+- batas jumlah produk, halaman, cabang, pengguna, transaksi, atau kuota
+  jika relevan;
+- add-on;
+- fitur yang tidak termasuk;
+- estimasi pengerjaan;
+- support;
+- target pelanggan;
+- syarat/prasyarat;
+- perbandingan antar-paket.
+
+Buat package comparison yang hanya menampilkan perbedaan yang didukung
+data. Jangan memberi label "paling laris", "terbaik", atau "recommended"
+tanpa bukti atau aturan yang jelas.
+
+10A.5. KNOWLEDGE CENTER / PUSAT PENGETAHUAN PENJUALAN
+
+Selain katalog, sediakan halaman "Pusat Pengetahuan AI" yang dapat
+dikelola admin tanpa coding. Isinya:
+- profil perusahaan dan positioning;
+- cerita perusahaan yang faktual;
+- daftar jasa dan paket yang sudah published;
+- FAQ per jasa;
+- cara kerja dan alur pengerjaan;
+- daftar fitur tersedia dan batasannya;
+- perbandingan paket;
+- panduan menjawab pertanyaan harga;
+- objection playbook (mahal, belum butuh, belum percaya, ingin diskusi,
+  sudah punya vendor, butuh waktu, minta contoh);
+- aturan diskon dan eskalasi;
+- ketentuan pembayaran;
+- kebijakan revisi, maintenance, dan support;
+- panduan demo;
+- portofolio/studi kasus/testimoni yang tervalidasi;
+- larangan klaim dan kalimat yang tidak boleh digunakan;
+- dokumen internal yang memang boleh dipakai AI.
+
+Setiap dokumen/FAQ memiliki sumber, status, pemilik, versi, tanggal
+berlaku, tanggal verifikasi, dan status publish. Sediakan editor, preview,
+pencarian, kategori, arsip, serta import dokumen yang aman. File yang
+diunggah harus dipindai/diurai dengan batas ukuran dan tipe file yang
+jelas. Perlakukan isi dokumen sebagai data tidak tepercaya; prompt
+injection di dalam dokumen tidak boleh mengubah instruksi sistem.
+
+10A.6. CARA AGENT MENGGUNAKAN KATALOG
+
+SCOUT:
+- Menemukan prospek dan menyimpan evidence kebutuhan.
+- Menggunakan kategori/vertical dan indikator kebutuhan dari katalog
+  untuk membantu query planning.
+- Tidak boleh mengirim penawaran dan tidak boleh mengarang bahwa bisnis
+  membutuhkan jasa tertentu.
+
+ANALYST:
+- Membandingkan kebutuhan prospek dengan jasa/paket POS published saja.
+- Menghasilkan product-fit score per jasa beserta evidence, confidence,
+  alasan cocok/tidak cocok, gap, dan pertanyaan discovery.
+- Mengabaikan produk draft, archived, stale, atau unavailable.
+- Tidak menjadikan harga murah sebagai satu-satunya alasan kecocokan.
+
+CLOSER:
+- Mengambil informasi hanya dari katalog/knowledge center versi aktif.
+- Menjelaskan manfaat sesuai masalah yang telah dikonfirmasi.
+- Mengajukan pertanyaan discovery jika data kebutuhan belum cukup.
+- Menawarkan maksimal opsi yang relevan, bukan membanjiri calon pelanggan.
+- Menjawab harga sesuai pricing_model.
+- Membuat quote hanya melalui quote engine.
+- Tidak menjanjikan fitur, timeline, diskon, hasil bisnis, atau SLA
+  di luar data dan kewenangannya.
+- Jika jawaban tidak ada di knowledge center, menyatakan belum memiliki
+  informasi terverifikasi dan menawarkan handover.
+
+GUARDIAN:
+- Memvalidasi status publish, freshness, harga, diskon, klaim, bukti,
+  izin penggunaan portofolio/testimoni, serta kewenangan agent.
+- Memblokir penawaran dari produk draft/archived/stale.
+- Memblokir diskon di luar batas.
+- Memblokir klaim yang tidak punya evidence.
+- Mencatat versi katalog dan knowledge base yang dipakai pada setiap
+  percakapan, quote, dan proposal.
+
+10A.7. PRICING ENGINE DAN QUOTE GENERATOR
+
+Dukung tiga mode utama:
+A. Fixed price: AI hanya menyampaikan harga yang ditetapkan.
+B. Flexible within limits: AI dapat menyusun penawaran dalam rentang
+   harga/diskon yang disetujui admin, dengan perhitungan transparan.
+C. Custom quote after discovery: AI mengumpulkan kebutuhan dan membuat
+   draft perhitungan; quote final harus mengikuti otorisasi yang ditetapkan.
+
+Pilihan awal konfigurasi yang disarankan: flexible within limits.
+Pilihan ini bukan harga otomatis dan tidak boleh membuat angka sendiri.
+Jika admin belum memasukkan nilai batas harga/diskon, fleksibilitas
+dinonaktifkan sampai aturan lengkap.
+
+Quote engine wajib:
+- menghitung subtotal, add-on, biaya setup, recurring fee, pajak/biaya,
+  diskon, total, termin, dan masa berlaku;
+- menyimpan input dan rumus perhitungan;
+- mendukung versi quote dan revisi;
+- mencatat siapa/agent yang membuat dan menyetujui;
+- mencegah diskon bertumpuk yang melampaui batas;
+- mengunci snapshot harga dan spesifikasi pada saat quote diterbitkan;
+- menandai quote kedaluwarsa;
+- tidak mengubah quote lama saat katalog berubah;
+- mengharuskan handover jika harga custom memerlukan keputusan manusia.
+
+10A.8. STATUS, PUBLIKASI, DAN PERUBAHAN KATALOG
+
+Gunakan alur:
+DRAFT → VALIDATION → PUBLISHED → STALE / ARCHIVED.
+
+Ketentuan:
+- hanya role berwenang dapat publish;
+- perubahan besar pada harga/fitur membuat versi baru;
+- quote yang sudah diterbitkan tetap memakai snapshot versi lama;
+- perubahan katalog tidak boleh mengubah isi proposal historis;
+- data yang melewati stale_after ditandai stale dan tidak boleh dipakai
+  untuk klaim sensitif sampai diverifikasi ulang;
+- setiap perubahan masuk audit log;
+- sediakan preview sebelum publish dan rollback ke versi terdahulu;
+- admin dapat menonaktifkan jasa segera jika ada kesalahan.
+
+10A.9. CONTOH PENGISIAN YANG DITAMPILKAN DI DASHBOARD
+
+Sediakan contoh record yang jelas diberi label "CONTOH — BELUM
+DIPUBLIKASIKAN". Contoh berikut hanya menunjukkan bentuk pengisian,
+bukan harga atau spesifikasi nyata:
+
+Nama jasa: Website E-commerce
+Ringkasan: Website toko online untuk mengelola katalog dan menerima
+pesanan secara digital.
+Target: Toko retail, brand lokal, distributor yang memenuhi kriteria.
+Masalah yang dibantu: Penjualan masih manual melalui chat atau katalog
+produk belum terkelola dalam satu tempat.
+Harga: [ISI HARGA OLEH ADMIN]
+Fitur tersedia: [ISI HANYA FITUR YANG SUDAH BENAR-BENAR ADA]
+Integrasi: [ISI INTEGRASI YANG SUDAH DIUJI]
+Durasi: [ISI ESTIMASI YANG SUDAH DISETUJUI]
+Demo: [MASUKKAN URL DEMO MILIK SENDIRI]
+Portofolio: [MASUKKAN PROYEK YANG BOLEH DITAMPILKAN]
+Batasan: [JELASKAN HAL YANG TIDAK TERMASUK]
+Status: DRAFT
+
+Buat contoh serupa hanya untuk POS/Kasir dan paket E-commerce + POS.
+Jangan membuat contoh layanan di luar dua kategori tersebut. Jangan
+mengisi nilai placeholder dengan asumsi agent.
+
+10A.10. IMPORT DAN MIGRASI KATALOG
+
+Sediakan:
+- input manual satu per satu;
+- duplikasi dari template;
+- import CSV dengan template unduhan;
+- import/export JSON;
+- preview mapping kolom;
+- validasi tipe, mata uang, harga, status fitur, dan duplikasi;
+- laporan baris berhasil/gagal;
+- mode dry-run;
+- transaksi atomik atau rollback jika import gagal;
+- tidak menimpa data existing tanpa pilihan eksplisit;
+- backup sebelum bulk update.
+
+Buat template CSV yang mudah diedit melalui spreadsheet HP. Dokumentasikan
+contoh kolom dan cara mengisinya. Jika memungkinkan, sediakan ekspor
+template yang bisa langsung diisi dari Android.
+
+10A.11. PENGATURAN MODEL BISNIS DAN KEBIJAKAN PENJUALAN
+
+Sediakan pengaturan admin:
+- menjual jasa sendiri;
+- jasa sendiri + proyek custom;
+- reseller/mitra;
+- harga tetap;
+- harga fleksibel dalam batas;
+- harga setelah discovery;
+- target wilayah dan industri;
+- bahasa komunikasi;
+- gaya komunikasi;
+- batas diskon;
+- batas negosiasi;
+- kapan wajib handover;
+- kapan AI boleh menjadwalkan demo;
+- kapan AI boleh membuat proposal;
+- aturan follow-up.
+
+Konfigurasi awal yang boleh ditawarkan wizard sebagai rekomendasi:
+model bisnis "produk POS/Kasir milik sendiri"; pricing "sesuai katalog
+yang diisi owner"; kategori awal hanya "Sistem POS/Kasir untuk usaha es
+tube/es kristal". Admin tetap harus mengonfirmasi dan mengisi detail nyata.
+Rekomendasi ini tidak boleh dianggap sebagai produk published.
+
+10A.12. ACCEPTANCE TEST KHUSUS KATALOG
+
+Buat test end-to-end yang membuktikan:
+1. Admin dapat menambah jasa tanpa mengedit kode.
+2. Admin dapat mengubah harga tanpa deploy ulang.
+3. Admin dapat membuat paket dan add-on.
+4. Draft tidak pernah muncul sebagai penawaran aktif.
+5. Produk archived/stale tidak dapat dipakai membuat quote baru.
+6. CLOSER mengambil data katalog terbaru yang published.
+7. CLOSER tidak mengarang harga jika harga kosong.
+8. CLOSER tidak mengklaim fitur PLANNED/UNAVAILABLE sebagai tersedia.
+9. Diskon di luar batas ditolak GUARDIAN.
+10. Quote lama mempertahankan snapshot versi saat dibuat.
+11. Import CSV invalid tidak merusak katalog.
+12. Admin dapat memulihkan versi katalog sebelumnya.
+13. Hak akses mencegah user tanpa izin mengubah harga/publish.
+14. Audit log mencatat perubahan, publikasi, arsip, dan rollback.
+15. AI dapat menjawab "layanan apa saja yang tersedia?" hanya dari
+    katalog published dan menjelaskan jika data belum lengkap.
+
+Definition of Done:
+Admin non-teknis dapat menambahkan satu jasa, paket, harga, fitur,
+portofolio, FAQ, dan aturan penawaran melalui dashboard; menerbitkannya;
+kemudian menjalankan simulasi percakapan dan membuktikan CLOSER
+menggunakan data tersebut tanpa perubahan source code.
+
+======================================================================
+11. CRM, DASHBOARD, DAN OPERATOR EXPERIENCE
+======================================================================
+
+Bangun UI operasional yang modern, profesional, responsif, mudah dipakai
+dari HP Android, tablet, dan desktop.
+
+Halaman minimal:
+1. Overview dashboard.
+2. Lead discovery / search jobs.
+3. Lead inbox dan qualification.
+4. CRM accounts/contacts.
+5. Conversation inbox omnichannel.
+6. AI agent activity dan handover.
+7. Products/catalog/pricing.
+8. Quotes/proposals/deals.
+9. Campaign/sequence governance (bukan spam engine).
+10. Analytics/funnel/revenue.
+11. Integrations/channel health.
+12. Consent/suppression/compliance center.
+13. Audit log.
+14. Settings, roles, budgets, provider routing.
+15. Rust/Python backend health dan performance.
+
+Fitur:
+- pencarian, filter, sort, pagination;
+- detail lead dengan evidence;
+- timeline aktivitas;
+- label dan notes;
+- task assignment;
+- conversation takeover;
+- pause/resume agent;
+- global dan per-channel kill switch;
+- status provider;
+- status queue dan failed jobs;
+- error detail yang aman;
+- export sesuai role;
+- audit trail.
+
+UI harus menampilkan status yang jujur:
+LIVE, SANDBOX, MOCK, DISABLED, NOT_CONFIGURED, NOT_VERIFIED,
+DEGRADED, ERROR.
+Jangan menampilkan badge "connected" hanya karena konfigurasi berisi API key;
+lakukan health check nyata.
+
+Pilih stack yang stabil, ringan, dan mudah dipelihara. Dokumentasikan
+keputusan stack. Jangan menambahkan framework besar tanpa kebutuhan.
+Pastikan backend API memiliki autentikasi, authorization, CSRF protection
+bila relevan, input validation, rate limiting, dan secure headers.
+
+
+
+11A. DETAIL UX ADMIN UNTUK PEMILIK JASA WEBSITE
+
+Dashboard harus menyediakan alur yang jelas bagi pemilik usaha yang
+tidak memahami pemrograman. Jangan menyembunyikan pengelolaan jasa di
+halaman Settings teknis.
+
+Buat navigasi utama yang mudah ditemukan:
+- Beranda.
+- Prospek.
+- Percakapan.
+- Pelanggan/CRM.
+- Jasa & Paket.
+- Pusat Pengetahuan AI.
+- Penawaran/Proposal.
+- Portofolio.
+- Integrasi.
+- Laporan.
+- Pengaturan.
+
+Pada halaman "Jasa & Paket", tampilkan ringkasan jumlah jasa published,
+draft, stale, dan archived. Setiap kartu/baris jasa memperlihatkan nama,
+kategori, model harga, status, tanggal verifikasi, serta aksi edit,
+duplikasi, preview, dan arsip.
+
+Buat alur "Tambah Jasa" bertahap:
+1. Pilih template atau mulai kosong.
+2. Isi nama, kategori, dan deskripsi.
+3. Isi target pelanggan dan masalah yang diselesaikan.
+4. Tambahkan fitur satu per satu beserta status ketersediaannya.
+5. Buat paket, harga, dan add-on.
+6. Isi durasi, prasyarat, batasan, support, dan ketentuan.
+7. Tambahkan demo, portofolio, gambar, dan FAQ.
+8. Preview halaman jasa dan contoh jawaban AI.
+9. Validasi kelengkapan.
+10. Simpan draft atau publish.
+
+Tampilkan indikator kelengkapan, misalnya:
+- Identitas jasa: lengkap/belum lengkap.
+- Harga: lengkap/belum lengkap.
+- Fitur dan batasan: lengkap/belum lengkap.
+- Bukti/demo: lengkap/belum lengkap.
+- Ketentuan pelaksanaan: lengkap/belum lengkap.
+Indikator ini tidak boleh menjadi skor pemasaran palsu; fungsinya hanya
+menunjukkan kesiapan data.
+
+Buat halaman "Simulasi Sales AI":
+- Admin memilih jasa/paket published.
+- Admin memasukkan contoh pertanyaan pelanggan.
+- AI menjawab memakai katalog dan knowledge base aktif.
+- UI menampilkan sumber data yang dipakai, versi katalog, dan alasan
+  jika AI menolak menjawab atau meminta handover.
+- Simulasi tidak mengirim pesan ke pelanggan nyata.
+- Sediakan test skenario harga, fitur belum tersedia, diskon, timeline,
+  keberatan, dan permintaan custom.
+
+Buat halaman "Portofolio":
+- tambah/edit/arsipkan proyek;
+- nama proyek dan jenis layanan;
+- ringkasan kebutuhan klien;
+- solusi yang benar-benar dikerjakan;
+- hasil yang boleh dipublikasikan;
+- gambar/demo URL;
+- izin publikasi dan sumber bukti;
+- status draft/published;
+- larangan menampilkan data rahasia klien.
+
+Buat halaman "FAQ & Playbook":
+- tambah pertanyaan dan jawaban;
+- kaitkan FAQ dengan jasa/paket tertentu;
+- simpan jawaban yang disetujui;
+- buat playbook keberatan;
+- tetapkan kapan CLOSER boleh menjawab dan kapan harus handover;
+- uji perubahan dengan simulasi sebelum publish.
+
+Semua halaman harus usable pada layar Android kecil. Form panjang harus
+dibagi menjadi langkah, menyimpan draft, memiliki validasi inline,
+dan tidak menghilangkan data ketika pengguna berpindah halaman.
+Gunakan istilah Bahasa Indonesia yang mudah dipahami. Sediakan bantuan
+singkat pada field yang berpotensi membingungkan.
+
+11A.1. PEMISAHAN DATA CONTOH DAN DATA BISNIS NYATA
+
+Pada instalasi pertama:
+- tampilkan katalog template sebagai draft;
+- tampilkan banner bahwa harga, fitur, portofolio, demo, dan ketentuan
+  harus diperiksa dan diisi pemilik;
+- jangan gunakan data demo untuk outbound, quote, atau laporan revenue;
+- sediakan tombol "Hapus seluruh data contoh" dengan konfirmasi dan
+  backup/preview dampak;
+- beri penanda TEST_DATA pada setiap fixture;
+- pastikan fixture tidak masuk ke statistik bisnis produksi.
+
+11A.2. PENGUJIAN PENERIMAAN DARI SISI PENGGUNA
+
+Lakukan usability test minimal pada viewport Android kecil, tablet,
+dan desktop. Buktikan admin dapat menyelesaikan tugas berikut tanpa
+mengedit file kode:
+- membuat atau mengubah produk POS/Kasir;
+- mengisi paket/tingkat layanan POS yang benar-benar tersedia;
+- menambahkan paket;
+- mengisi harga dan batas diskon;
+- menambah fitur dan batasan;
+- menautkan demo/portofolio;
+- menambahkan FAQ;
+- mem-preview jawaban CLOSER;
+- menerbitkan katalog;
+- mengubah harga dan melihat versi baru;
+- mengarsipkan jasa.
+
+Catat langkah, hasil, screenshot bila tooling mendukung, dan hambatan UX.
+
+======================================================================
+12. DATA MODEL, EVENT ARCHITECTURE, DAN RELIABILITY
+======================================================================
+
+Evaluasi dan perluas SQLite yang ada secara backward-compatible untuk
+single-instance/Android/local deployments. Jika kebutuhan concurrency,
+multi-user, atau multi-instance menuntut database server, buat abstraction
+dan opsi PostgreSQL. Jangan memaksakan migrasi database tanpa alasan.
+
+Tambahkan model:
+- organizations/workspaces;
+- users/roles/permissions;
+- businesses/accounts;
+- contacts;
+- prospects/leads;
+- evidence/source observations;
+- products/features/packages;
+- conversations/messages;
+- consent/suppression;
+- channel connections;
+- campaigns/sequences;
+- activities/tasks;
+- quotes/proposals;
+- deals/payments;
+- webhook events;
+- provider usage/cost;
+- audit/security events;
+- retention/deletion requests.
+
+Reliability:
+- transactional outbox untuk event outbound;
+- idempotency keys;
+- retry policy dengan jitter;
+- dead-letter queue;
+- replay aman;
+- job leases dan heartbeat;
+- backpressure;
+- bounded concurrency;
+- graceful shutdown;
+- backup/restore;
+- migration tests;
+- data integrity constraints;
+- observability tanpa membocorkan PII.
+
+======================================================================
+13. API DAN INTEGRATION CONTRACTS
+======================================================================
+
+Buat dokumentasi OpenAPI untuk backend API.
+Buat contract tests untuk setiap external connector.
+Gunakan typed schemas dan versioning.
+Setiap connector memiliki:
+- interface;
+- configuration schema;
+- credential validation;
+- health check;
+- rate limit;
+- capability list;
+- error mapping;
+- retry classification;
+- pagination;
+- idempotency;
+- observability;
+- sandbox/mock;
+- live verification status.
+
+Jangan menulis integrasi berdasarkan asumsi endpoint lama. Gunakan dokumentasi
+resmi terkini yang dapat diakses dalam lingkungan build. Catat URL dokumen,
+tanggal verifikasi, versi API, permission yang diperlukan, dan batasan.
+Jika dokumentasi tidak tersedia, tandai dan jangan mengarang endpoint.
+
+======================================================================
+14. TESTING DAN EVALUATION — WAJIB LEBIH DARI UNIT TEST
+======================================================================
+
+Pertahankan semua test lama dan tambah:
+
+14.1 Unit tests
+- seluruh agent;
+- state machine;
+- pricing/quote;
+- consent/opt-out;
+- Rust functions;
+- provider parsing;
+- schema validation.
+
+14.2 Integration tests
+- Python ↔ Rust;
+- Kernel ↔ agent;
+- Agent ↔ database;
+- Agent ↔ LLM mock;
+- LLM provider live smoke test bila credential tersedia;
+- SCOUT ↔ connector sandbox;
+- inbound webhook ↔ conversation;
+- GUARDIAN ↔ sender gateway;
+- sender ↔ channel sandbox.
+
+14.3 End-to-end scenarios
+A. Toko retail hanya berjualan melalui media sosial/chat dan memiliki
+   kebutuhan nyata untuk E-commerce.
+B. Toko fisik mencatat transaksi dan stok secara manual sehingga memiliki
+   kebutuhan nyata untuk POS/Kasir.
+C. Bisnis memiliki toko online tetapi operasional toko fisiknya belum
+   terhubung dengan POS/stok.
+D. Retail multi-cabang membutuhkan sinkronisasi transaksi/stok melalui
+   POS jika fitur tersebut benar-benar tersedia.
+E. Brand/produsen/distributor menjual produk dan memiliki kebutuhan
+   terverifikasi untuk E-commerce B2C/B2B.
+F. Bisnis kuliner hanya masuk jika bukti menunjukkan kebutuhan POS/kasir
+   atau pemesanan E-commerce yang sesuai katalog.
+G. Bisnis sudah memiliki E-commerce/POS yang memadai → jangan dipaksa membeli.
+H. Bisnis tidak menjual produk atau tidak memiliki kebutuhan E-commerce/POS
+   yang dapat dibuktikan → NOT_A_FIT, bukan lead berkualitas.
+H. Prospek tidak memiliki kebutuhan yang jelas → nurture/unknown, bukan false claim.
+I. Pelanggan bertanya harga → jawab dari katalog.
+J. Pelanggan keberatan harga → respons sesuai policy.
+K. Pelanggan meminta diskon melebihi batas → handover.
+L. Pelanggan meminta demo → jadwalkan sesuai availability.
+M. Pelanggan opt-out → suppression segera.
+N. Webhook duplikat → tidak membuat balasan ganda.
+O. Provider timeout → fallback aman.
+P. Rust unavailable → Python fallback terlihat.
+Q. Customer asks feature unavailable → AI menjawab jujur.
+R. Payment unverified → deal bukan WON.
+S. Prompt injection dalam website/pesan → tidak mengubah policy.
+T. Channel credentials invalid → tidak mengirim dan tampilkan status.
+
+14.4 Adversarial tests
+- prompt injection;
+- fake payment;
+- fabricated pricing;
+- false testimonials;
+- opt-out paraphrases;
+- identity confusion;
+- cross-customer data leakage;
+- duplicate webhook;
+- race condition;
+- unauthorized tool call;
+- malicious URL/SSRF;
+- oversized payload;
+- Unicode/encoding abuse;
+- quota exhaustion;
+- provider outage;
+- clock/timezone manipulation.
+
+14.5 Performance tests
+- discovery ingestion throughput;
+- dedup throughput;
+- scoring latency;
+- Python vs Rust;
+- webhook response latency;
+- queue throughput;
+- memory use;
+- mobile/low-resource behavior.
+
+14.6 Acceptance
+- Tidak boleh mengurangi test lama hanya agar suite hijau.
+- Jangan menghapus test yang gagal; perbaiki implementasi atau dokumentasikan
+  alasan requirement berubah.
+- Semua test memiliki ID dan traceability.
+- Laporkan jumlah pass/fail/skip/not-verified secara terpisah.
+- Jangan menyebut sandbox test sebagai live test.
+- Buat golden dataset yang mewakili berbagai vertical dan bahasa.
+- Evaluasi kualitas percakapan dengan rubrik factuality, relevance, empathy,
+  discovery, product fit, policy, clarity, conversion quality, dan opt-out.
+- Ukur precision/recall lead qualification dan false-positive rate.
+- Tidak boleh mengoptimalkan conversion dengan mengorbankan consent,
+  factuality, atau pengalaman pelanggan.
+
+======================================================================
+15. OBSERVABILITY, COST, DAN RESOURCE MANAGEMENT
+======================================================================
+
+- Structured logs dengan redaction.
+- Metrics untuk jobs, latency, provider usage, channel delivery, error,
+  funnel, conversion, opt-out, cost, and fallback.
+- Trace/correlation ID untuk setiap lead, conversation, job, dan event.
+- Budget per agent, provider, workspace, dan job.
+- Hard budget cap dan circuit breaker.
+- Cost estimator per lead dan per deal.
+- Token usage tracking jika provider mengembalikan data.
+- Cache hanya untuk data yang aman dan masih fresh.
+- Bounded memory/queue agar dapat berjalan di perangkat dengan resource terbatas.
+- Configurable worker count.
+- Background tasks tidak boleh mengunci UI/API.
+- Scheduler dapat dipause.
+- Health endpoint dan diagnostics.
+- Backup otomatis terkonfigurasi; jangan menghapus backup lama tanpa policy.
+
+Optimalkan untuk deployment lokal/Android Termux bila memungkinkan, tetapi
+jangan mengklaim Android sebagai target production multi-user sebelum diuji.
+Sediakan deployment profile:
+- local development;
+- Android/Termux low-resource;
+- VPS single instance;
+- production server.
+Jelaskan batas masing-masing.
+
+======================================================================
+16. SECURITY DAN SECRET MANAGEMENT
+======================================================================
+
+- Jangan commit .env, token, API key, webhook secret, database pribadi.
+- Sediakan .env.example dengan placeholder.
+- Validasi konfigurasi saat startup.
+- Redact secret pada exception/log.
+- Webhook HMAC/signature verification.
+- TLS untuk komunikasi eksternal.
+- Least privilege untuk API scopes.
+- Role-based access control.
+- Secure session management.
+- Rate limiting.
+- SSRF protection termasuk DNS rebinding/private IP checks.
+- File upload validation.
+- Dependency pinning dan audit.
+- Backup encryption bila menyimpan PII.
+- Rotasi credential guidance.
+- Incident response runbook.
+- Jangan pernah menampilkan full secret pada CLI/dashboard.
+
+======================================================================
+17. IMPLEMENTATION PHASES — KERJAKAN BERURUTAN SAMPAI SELESAI
+======================================================================
+
+PHASE 0 — Baseline and preservation
+- Backup source/database/config.
+- Audit seluruh repository.
+- Run baseline tests.
+- Freeze acceptance registry lama.
+- Buat architecture map dan implementation matrix.
+DoD: baseline reproducible, backup verified, no destructive change.
+
+PHASE 1 — Architecture and data foundation
+- Refactor boundaries bila perlu.
+- Database migrations.
+- Event/outbox/idempotency.
+- CRM data model.
+- RBAC.
+DoD: migrations up/down, integrity, backup/restore tests.
+
+PHASE 2 — Rust core
+- Cargo workspace.
+- Native library/binding.
+- Move selected hot paths based on profiling.
+- Python fallback and parity.
+DoD: build, parity, fuzz/property tests, benchmark, status reporting.
+
+PHASE 3 — LLM production adapters
+- Gemini live-capable adapter verification.
+- Ollama local adapter verification.
+- Routing, schemas, retry, fallback, budgets.
+- Prompt registry/versioning.
+DoD: mocks + live smoke test if credentials/network available; otherwise
+NOT_VERIFIED with reproducible operator instructions.
+
+PHASE 4 — SCOUT multi-vertical intelligence
+- Fokuskan vertical taxonomy pada bisnis penjual produk yang relevan untuk E-commerce/POS.
+- Product need signals khusus E-commerce, toko online, POS/kasir, stok, transaksi, dan integrasi keduanya.
+- Build official source connectors that are actually accessible.
+- Website intelligence.
+- Evidence provenance and dedup.
+DoD: connector contract tests, source status, end-to-end discovery fixtures.
+
+PHASE 5 — ANALYST advanced qualification
+- Product-specific scoring.
+- Explainability.
+- Confidence and freshness.
+- Calibration dataset.
+- Next-best-action.
+DoD: golden evaluation, false-positive review, score explanations.
+
+PHASE 6 — CLOSER real AI conversation
+- LLM-driven conversation with structured tools.
+- CRM memory.
+- Discovery and objection playbooks.
+- Quote/proposal engine.
+- Demo scheduling.
+- Human handover.
+DoD: multi-turn golden conversations and no unsupported claims.
+
+PHASE 7 — Channel integrations
+- Official WhatsApp Business Platform if available.
+- Email provider.
+- Website live chat.
+- Other official channels where authorized.
+- Inbound webhook and outbound gateway.
+DoD: sandbox E2E, signature, idempotency, policy enforcement.
+Live outbound remains OFF by default.
+
+PHASE 8 — GUARDIAN expansion
+- Consent/lawful basis and suppression.
+- Privacy export/delete.
+- Retention runner.
+- Channel-specific policies.
+- Security hardening.
+DoD: adversarial tests and audit verification.
+
+PHASE 9 — Dashboard and operator console
+- Responsive UI.
+- CRM and inbox.
+- Agent controls.
+- Analytics.
+- Integrations and compliance settings.
+DoD: UI/API tests, mobile usability, RBAC.
+
+PHASE 10 — Sales operations and deal lifecycle
+- Campaign/sequence governance.
+- Quote/proposal.
+- Payment verification.
+- Won/lost and onboarding handoff.
+- Reporting.
+DoD: end-to-end simulated sales lifecycle.
+
+PHASE 11 — Full integration, performance, release
+- Run all tests.
+- Run security and performance tests.
+- Validate docs and setup scripts.
+- Build deployment profiles.
+- Release checklist and rollback plan.
+DoD: production readiness report with explicit gaps.
+
+Do not stop after a phase if its DoD is unmet. Fix the cause and rerun.
+Do not claim completion for blocked external work; finish all code and
+testable work around it.
+
+======================================================================
+18. FILES, DOCUMENTATION, AND DELIVERABLES
+======================================================================
+
+Update or create:
+- README.md (truthful setup and capability matrix).
+- docs/CURRENT_STATE_AUDIT.md.
+- docs/UPGRADE_PLAN.md.
+- docs/ARCHITECTURE.md.
+- docs/IMPLEMENTATION_MATRIX.md.
+- docs/INTEGRATION_STATUS.md.
+- docs/SECURITY_MODEL.md.
+- docs/PRIVACY_AND_COMPLIANCE.md.
+- docs/OPERATIONS_RUNBOOK.md.
+- docs/DEPLOYMENT_ANDROID.md.
+- docs/DEPLOYMENT_VPS.md.
+- docs/RUST_PYTHON_BOUNDARY.md.
+- docs/PROVIDER_SETUP.md.
+- docs/CHANNEL_SETUP.md.
+- docs/SALES_PLAYBOOK.md.
+- docs/PRODUCT_CATALOG_GUIDE.md.
+- docs/TEST_REPORT.md.
+- docs/PRODUCTION_READINESS.md.
+- CHANGELOG.md.
+
+Setiap dokumen harus sesuai implementasi aktual. Jangan menandai fitur
+complete hanya karena dokumentasi dibuat.
+
+Tambahkan command CLI yang benar-benar bekerja untuk:
+- doctor;
+- status;
+- eval;
+- test;
+- scout/discover;
+- lead inspect;
+- lead qualify;
+- conversation inspect;
+- provider health;
+- channel health;
+- dashboard/server start;
+- backup/restore;
+- privacy export/delete;
+- retention run;
+- rust status/benchmark;
+- dry-run simulation.
+Gunakan command yang konsisten dan dokumentasikan help aktual.
+
+======================================================================
+19. DEFINITION OF DONE GLOBAL
+======================================================================
+
+Proyek hanya boleh dinyatakan UPGRADED bila:
+
+1. Fitur lama tetap bekerja atau perubahan breaking dijelaskan dan dimigrasikan.
+2. Rust benar-benar dibangun, dipanggil dari Python untuk scope yang dipilih,
+   parity-tested, benchmarked, dan fallback terlihat.
+3. Gemini/Ollama memiliki integrasi implementasi nyata dan status verifikasi
+   yang jujur.
+4. SCOUT mendukung vertical bisnis penjual produk yang relevan untuk E-commerce/POS, bukan pencarian umum semua jenis usaha.
+5. Ada connector source nyata yang sah dan dapat diverifikasi; connector lain
+   yang memerlukan akses khusus diberi status NOT_CONFIGURED/NOT_VERIFIED.
+6. ANALYST dapat menilai kebutuhan website/e-commerce/POS secara terpisah
+   dan menjelaskan bukti.
+7. CLOSER mampu multi-turn conversation menggunakan LLM dan knowledge base,
+   bukan hanya draft deterministik.
+8. Inbound channel nyata/sandbox berjalan dengan webhook dan idempotency.
+9. Outbound adapter resmi tersedia dan melewati GUARDIAN authorize_send.
+10. Consent, opt-out, contact lock, kill switch, rate limits, dan audit tidak
+    dapat dilewati.
+11. CRM dan dashboard tersedia serta responsif.
+12. Quote, proposal, deal, payment verification, dan onboarding workflow ada.
+13. Privacy export/delete dan retention berjalan serta diuji.
+14. Semua unit/integration/e2e/adversarial tests dilaporkan.
+15. Tidak ada klaim fitur, harga, konektor, atau status yang palsu.
+16. Setup dan deployment terdokumentasi.
+17. Semua known gaps ditampilkan dalam PRODUCTION_READINESS.md.
+
+Jika satu syarat eksternal terhalang oleh credential, akses, biaya, approval,
+atau policy pihak ketiga, jangan menyembunyikannya. Selesaikan implementasi
+yang dapat dilakukan, sediakan sandbox, tulis langkah konfigurasi, dan
+tandai status yang benar. Tidak boleh memalsukan live verification.
+
+======================================================================
+20. ATURAN KERJA ENGINEERING
+======================================================================
+
+- Baca file sebelum mengedit.
+- Gunakan patch kecil dan terarah; hindari rewrite massal tanpa alasan.
+- Pertahankan API dan schema yang masih digunakan.
+- Tambahkan migration, bukan edit database pengguna secara manual.
+- Setiap fitur baru harus punya test.
+- Jalankan test relevan setelah setiap perubahan besar.
+- Jalankan full test suite pada akhir setiap phase.
+- Periksa lint/type/security bila tool tersedia.
+- Jangan menurunkan kualitas test untuk mendapatkan hasil hijau.
+- Jangan hardcode API key, model, URL, harga, atau credential.
+- Jangan menambahkan dependensi tanpa mengevaluasi ukuran, lisensi,
+  keamanan, platform support, dan biaya.
+- Catat keputusan arsitektur.
+- Hindari TODO kosong, pass placeholder, fake adapter, dan mock yang
+  disamarkan sebagai integrasi nyata.
+- Jika fitur belum dapat diselesaikan, buat error/status eksplisit dan
+  dokumentasikan blocker.
+- Jangan menghapus data pengguna.
+- Jangan menjalankan outbound live send, mengirim email/WhatsApp sungguhan,
+  membuat transaksi, atau menghubungi prospek selama build/test.
+- Gunakan fixture, mock, local test server, dan sandbox resmi.
+- Semua live actions tetap disabled setelah upgrade sampai pemilik
+  melakukan konfigurasi dan aktivasi eksplisit per kanal.
+- Jangan meminta user melakukan pekerjaan coding manual jika agent dapat
+  mengerjakannya di workspace. Untuk credential/akun/legal setup yang memang
+  hanya dapat dilakukan pemilik, berikan instruksi langkah demi langkah.
+
+======================================================================
+21. LAPORAN AKHIR YANG WAJIB DIBERIKAN
+======================================================================
+
+Setelah implementasi, laporkan dengan jujur:
+
+A. Ringkasan perubahan.
+B. File/modul baru dan yang diubah.
+C. Fitur lama yang dipertahankan.
+D. Arsitektur Rust + Python dan fungsi yang benar-benar memakai Rust.
+E. Hasil benchmark.
+F. Provider LLM: mock/sandbox/live verified.
+G. Source connectors: status masing-masing.
+H. Channel connectors: status masing-masing.
+I. Kemampuan SCOUT, ANALYST, CLOSER, GUARDIAN.
+J. Dashboard dan CRM yang sudah berfungsi.
+K. Hasil unit, integration, E2E, adversarial, parity, dan performance tests.
+L. Known limitations dan blocker eksternal.
+M. Langkah setup yang harus dilakukan pemilik.
+N. Security/compliance readiness.
+O. Apakah sistem siap untuk local testing, sandbox, pilot, atau production.
+P. Perintah tepat untuk menjalankan doctor, tests, server, dashboard,
+   discovery simulation, dan conversation simulation.
+
+Gunakan tabel status:
+IMPLEMENTED + TESTED
+IMPLEMENTED + NOT_LIVE_VERIFIED
+SANDBOX_VERIFIED
+MOCK_ONLY
+NOT_CONFIGURED
+BLOCKED_EXTERNAL
+NOT_IMPLEMENTED
+
+Jangan menggunakan satu label "SELESAI" untuk semua status.
+
+======================================================================
+22. PERINTAH EKSEKUSI PERTAMA
+======================================================================
+
+Mulai sekarang:
+1. Identifikasi root workspace proyek AI SALES HQ yang benar.
+2. Audit seluruh file dan baseline test.
+2A. Audit arsip referensi MIEFLOW POS yang diberikan owner; jangan menimpa
+    atau mengubah arsip asli. Buat PRODUCT_CAPABILITY_MATRIX.md dari source
+    dan tests yang benar-benar tersedia.
+3. Buat backup.
+4. Buat CURRENT_STATE_AUDIT.md dan IMPLEMENTATION_MATRIX.md.
+5. Petakan requirement prompt ini ke modul dan acceptance tests.
+6. Buat urutan kerja berdasarkan dependensi teknis.
+7. Mulai implementasi dari fondasi yang paling kritis.
+8. Kerjakan phase demi phase sampai semua pekerjaan yang dapat dilakukan
+   dalam lingkungan tersedia selesai.
+9. Jangan hanya memberikan rencana. Ubah source code, tambahkan test,
+   jalankan test, dan dokumentasikan hasilnya.
+10. Pertahankan default safe mode dan jangan mengirim pesan nyata.
+
+TUJUAN FINAL:
+AI SALES HQ harus berkembang dari sistem riset dan drafting menjadi
+AUTONOMOUS AI SALES TEAM yang secara fokus menemukan bisnis makanan dan
+minuman (F&B), termasuk restoran, warung, cafe, kedai minuman, bakery,
+katering, cloud kitchen, franchise kuliner, serta produsen/distributor es
+tube/es kristal, yang memiliki kebutuhan SISTEM KASIR/POS yang terbukti,
+memverifikasi kebutuhan dan product fit,
+menawarkan hanya produk POS beserta fitur pendukung yang benar-benar
+tersedia, berkomunikasi secara natural melalui kanal resmi, mengelola
+negosiasi dan proposal, membantu closing,
+memverifikasi transaksi, dan mengelola seluruh funnel penjualan
+dengan empat agent utama yang dikoordinasikan kernel, menggunakan
+arsitektur Rust + Python hybrid, LLM nyata, CRM, dashboard, audit,
+keamanan, dan evaluasi yang dapat dibuktikan.
+
+JANGAN MENGAKU SUDAH SELESAI SEBELUM KODE, TEST, INTEGRASI, DAN BUKTI
+IMPLEMENTASINYA BENAR-BENAR MENDUKUNG KLAIM TERSEBUT.
+
+======================================================================
+23. PRIORITAS KHUSUS: PEMILIK HARUS BISA MENGISI JASA SENDIRI
+======================================================================
+
+Jangan menganggap Product Catalog selesai hanya karena tabel database,
+model Python, endpoint API, atau seed data telah dibuat. Katalog harus
+benar-benar dapat dipakai melalui UI admin yang berfungsi.
+
+Urutan bukti yang wajib ditunjukkan:
+1. Jalankan dashboard.
+2. Login sebagai owner/admin.
+3. Buka menu "Jasa & Paket".
+4. Tambahkan jasa baru melalui form.
+5. Simpan sebagai draft.
+6. Lengkapi paket, harga, fitur, batasan, timeline, dan bukti.
+7. Jalankan validasi dan preview.
+8. Terbitkan jasa.
+9. Buka "Simulasi Sales AI".
+10. Tanyakan kepada CLOSER tentang jasa, harga, fitur, dan batasannya.
+11. Tunjukkan bahwa jawaban bersumber dari record katalog published.
+12. Ubah salah satu data jasa dan buktikan versi katalog bertambah.
+13. Pastikan quote historis tetap memakai snapshot lama.
+
+Buat panduan singkat berbahasa Indonesia dengan judul
+"CARA MEMASUKKAN PRODUK POS/KASIR KE AI SALES HQ". Panduan harus menjelaskan
+langkah dari login dashboard sampai jasa dapat digunakan agent, termasuk
+contoh pengisian dengan placeholder dan cara menghindari klaim palsu.
+
+Pada laporan akhir, jangan hanya mengatakan "katalog sudah tersedia".
+Tampilkan:
+- URL/route halaman katalog;
+- langkah membuka halaman;
+- field yang tersedia;
+- screenshot atau bukti UI jika tooling mendukung;
+- test yang membuktikan create/edit/publish;
+- contoh simulasi percakapan yang memakai katalog;
+- file panduan pemilik;
+- batasan yang masih belum selesai.
+
+Kriteria akhir yang paling penting:
+PEMILIK DAPAT MENGUBAH JASA, PAKET, HARGA, FITUR, PORTOFOLIO, DAN FAQ
+DARI DASHBOARD TANPA MENGUBAH SOURCE CODE ATAU BUILD ULANG APLIKASI.
+Jika hanya tersedia melalui edit JSON/YAML/database secara manual, fitur
+ini BELUM memenuhi requirement.
+
+======================================================================
+24. FINAL SCOPE GUARD — POS F&B, TERMASUK ES TUBE / ES KRISTAL
+
+Sebelum menyelesaikan pekerjaan, lakukan repository-wide audit terhadap
+seluruh prompt, source, fixture, seed, kategori, scoring, query planner,
+dashboard filter, sales playbook, dan test.
+
+Hasil yang diwajibkan:
+- Produk jualan hanya SISTEM KASIR / POS.
+- Target utama adalah usaha makanan dan minuman: restoran, rumah makan,
+  warung makan, cafe, kedai minuman, bakery, toko kue, katering, cloud
+  kitchen, food stall, take-away, franchise kuliner, frozen food, serta
+  usaha F&B lain dengan bukti kecocokan.
+- Produsen/distributor/agen/grosir/depot/toko es tube dan es kristal tetap
+  menjadi subsegmen khusus di dalam cakupan target.
+- Sektor non-F&B default OFF.
+- Tidak ada E-commerce, paket gabungan, company profile, landing page,
+  website umum, atau jasa non-POS sebagai produk/target penawaran.
+- SCOUT memisahkan F&B niche fit, POS need evidence, dan MIEFLOW capability.
+- Ketiadaan website atau order via chat bukan bukti pasti butuh POS.
+- Setiap lead memiliki provenance, freshness, confidence, dan evidence IDs.
+- Lead tanpa bukti POS tidak boleh otomatis dikirim ke CLOSER.
+- Fitur F&B khusus yang belum ada ditandai GAP; tidak boleh dijanjikan.
+- Konektor mock tidak boleh disebut live.
+- Tidak ada outbound live saat audit, build, test, atau simulasi.
+
+NEGATIVE TEST WAJIB:
+1. Company profile/landing page → tidak masuk pipeline.
+2. Retail non-F&B saat sektor sekunder OFF → bukan target.
+3. Restoran tanpa bukti POS need → niche fit saja, bukan HIGH_PRIORITY.
+4. Order via WhatsApp saja → bukan bukti pasti proses manual buruk.
+5. Restoran butuh kitchen display/table management yang belum didukung →
+   PRODUCT_GAP_BLOCKER.
+6. Bisnis es yang hanya konsumen/pembeli → bukan distributor es.
+7. Prospek opted-out/contact-ineligible → tidak boleh outbound.
+8. Sumber mock → tidak boleh tampil sebagai live.
+9. Data usang → STALE.
+10. Entitas berbeda bernama mirip → tidak auto-merge.
+
+LAPORAN AKHIR harus menyertakan:
+- query F&B dan wilayah yang benar-benar dijalankan;
+- sumber dan status konektor;
+- sampel evidence dan hasil scoring;
+- precision/false-positive hasil tests;
+- fitur MIEFLOW yang verified vs gap;
+- hasil dashboard job control dan evidence viewer;
+- known limitations dan keputusan owner yang masih diperlukan.
+
+Jangan menghapus fitur infrastruktur generik yang masih dibutuhkan sistem.
+Yang dibatasi adalah fokus bisnis, pencarian prospek, katalog, dan penawaran,
+bukan kualitas arsitektur, keamanan, observability, testing, Rust/Python,
+atau dashboard monitoring.
+Yang dibatasi adalah fokus bisnis, pencarian prospek, katalog, dan penawaran,
+bukan mengurangi kualitas arsitektur, keamanan, observability, testing,
+Rust/Python hybrid, atau dashboard monitoring.
+
+======================================================================
+25. V5 FINAL SCOPE AND SCOUT ACCEPTANCE GATE — POS F&B
+======================================================================
+
+Sebelum release, lakukan repository-wide audit pada seluruh prompt, source,
+seed, fixtures, taxonomy, query planner, scoring, catalog, playbook,
+dashboard, documentation, tests, dan konfigurasi.
+
+WAJIB:
+- Produk jualan hanya POS/Kasir.
+- Target utama adalah bisnis F&B; rantai usaha es tube/es kristal tetap menjadi subsegmen.
+- Vertical non-F&B sekunder default OFF.
+- Tidak ada E-commerce fit, combined package, atau general website lead.
+- SCOUT mengumpulkan evidence identitas F&B dan evidence kebutuhan POS sebagai
+  dua klasifikasi terpisah.
+- Ketiadaan website bukan bukti kebutuhan POS.
+- Order via WhatsApp bukan bukti pasti proses manual atau kebutuhan POS.
+- Setiap lead memiliki provenance, freshness, confidence, dan evidence IDs.
+- Lead F&B tanpa bukti POS tidak boleh dikirim ke CLOSER.
+- Kebutuhan fitur khusus F&B/es dibandingkan dengan PRODUCT_CAPABILITY_MATRIX.
+- Fitur F&B yang belum ada ditandai GAP; tidak boleh dijanjikan.
+- Konektor mock tidak boleh disebut live.
+- Tidak ada outbound live saat audit, build, test, atau simulasi.
+- Semua source/query, bobot, threshold, dan keputusan dapat diaudit.
+
+NEGATIVE TEST WAJIB:
+1. Permintaan company profile/landing page → tidak masuk pipeline.
+2. Toko fashion tanpa kebutuhan POS yang terbukti → bukan prioritas.
+3. Bisnis minuman yang hanya membeli es → bukan target produsen/distributor.
+4. Pabrik es dengan niche fit tinggi tetapi POS need unknown → QUALIFY/
+   NICHE_ONLY_NO_POS_EVIDENCE, bukan otomatis HIGH_PRIORITY.
+5. Prospek es dengan kebutuhan piutang tetapi POS tidak mendukung → GAP_BLOCKER.
+6. Prospek dengan kebutuhan satuan kg/pack yang belum didukung → GAP_BLOCKER.
+7. Prospek opted-out atau contact-ineligible → tidak boleh outbound.
+8. Sumber mock → tidak boleh muncul sebagai live result.
+9. Data usang → STALE.
+10. Nama bisnis mirip tetapi entitas berbeda → tidak auto-merge.
+
+LAPORAN AKHIR harus menunjukkan:
+- daftar query F&B/es dan wilayah yang benar-benar dijalankan;
+- sumber dan status konektor;
+- sampel evidence prospek dengan data sensitif diminimalkan;
+- hasil scoring dan alasan;
+- precision/false-positive dari test fixture;
+- daftar fitur MIEFLOW POS yang verified vs gap;
+- bukti dashboard job control dan evidence viewer;
+- hasil test seluruh scope guard;
+- known limitations dan pekerjaan yang memerlukan keputusan owner.
+
+Jangan menyatakan AI SALES HQ siap produksi hanya karena seluruh unit test
+lulus. Nyatakan kesiapan per lapisan: code, data source, connector, model,
+dashboard, security, compliance, dan human operating process.
+
+
+======================================================================
+26. V5 F&B SEGMENT PRIORITY AND DISCOVERY PRINCIPLES
+======================================================================
+
+Prioritas discovery:
+1. F&B dengan banyak transaksi/menu, antrean, beberapa kanal order, shift,
+   stok, atau lebih dari satu outlet yang didukung evidence.
+2. F&B yang secara eksplisit mengungkap kebutuhan kasir, stok, laporan,
+   atau pencatatan penjualan.
+3. Produsen/distributor/agen es tube dan es kristal dengan bukti transaksi
+   kasir/penjualan dan kebutuhan POS.
+4. F&B kecil tetap boleh ditemukan, tetapi jangan diberi prioritas tinggi
+   tanpa evidence kebutuhan dan kecocokan produk.
+
+Jangan bias hanya ke bisnis besar. Usaha kecil dapat cocok bila kebutuhan
+dan fitur POS sesuai. Sebaliknya, restoran besar dapat tidak cocok bila
+membutuhkan kitchen workflow, recipe costing, table management, integrasi
+delivery, atau multi-outlet yang belum didukung.
+
+SCOUT harus menyediakan filter dashboard:
+- F&B segment;
+- restaurant / warung / cafe / beverage / bakery / catering / cloud kitchen /
+  food stall / franchise / frozen food / food supplier / ice supplier;
+- city/region;
+- niche fit;
+- POS need evidence;
+- product capability fit;
+- product gap;
+- evidence freshness;
+- source status;
+- qualification status.
+
+Keluaran yang baik bukan "semua restoran di satu kota", tetapi daftar
+prospek yang identitas F&B-nya terbukti, sinyal kebutuhan POS-nya jelas,
+dan kebutuhannya cocok dengan fitur MIEFLOW yang benar-benar tersedia.

@@ -1,0 +1,826 @@
+# MASTER UPGRADE PROMPT — OKX 37 SKILLS V2 → HYBRID QUANT INTELLIGENCE V3
+## PYTHON + RUST | INSTITUTIONAL-STYLE ENGINEERING | DEMO-ONLY | AUDIT-FIRST | AUTONOMOUS EXECUTION
+
+You are an autonomous senior engineering and quantitative research team tasked with upgrading the user's existing **OKX 37 Skills V2** package into a stronger, practical **Hybrid Quant Intelligence V3**. This is a skills/tooling upgrade—not a promise of profitable trading and not authorization to trade live funds.
+
+Your job is to inspect the supplied archive, understand its actual contents, preserve its valuable work, then upgrade it comprehensively and verifiably. Do not merely write recommendations, plans, or sample files: perform the upgrade on the files, build the package, run tests and audits, and deliver the finished artifact when your environment permits.
+
+---
+
+# 0. NON-NEGOTIABLE SAFETY, SCOPE, AND TRUTHFULNESS
+
+1. **Demo-only by default.** Preserve and strengthen OKX demo/test trading constraints. No live trading, real-money orders, live account activation, or production credentials. Do not change demo protections to make tests pass.
+2. **Never promise profits, win rates, returns, institutional equivalence, or “100% accuracy.”** Professional engineering practices do not guarantee performance.
+3. **No fabricated verification.** Do not claim tests, builds, benchmarks, scans, API calls, compatibility, or audits passed unless you ran them and captured evidence. Mark unrun items as NOT RUN with a reason.
+4. **Preserve V2.** Work on a copy/new V3 package. Keep original skill files, reference material, provenance, useful tests, and behavior. Do not destructively replace the source archive or silently delete skills.
+5. **Inspect first, then change.** Inventory every file, all skill names and instructions, references, scripts, tests, reports, and metadata. Read relevant contents, not just archive filenames. Establish baseline tests and issues before modifying.
+6. **No unnecessary dependencies.** Add dependencies only where justified; pin or constrain them appropriately, document build requirements, check license/security/maintenance status, and provide lightweight alternatives when practical.
+7. **Safety-critical behavior fails closed.** Unknown, stale, incomplete, conflicting, or invalid data/state must not permit trading. No AI agent may bypass risk controls.
+8. **Autonomy.** Do not stop to ask for approval after every phase. Use reasonable engineering judgment and continue through the complete workflow. Ask only if a genuinely blocking missing input/permission cannot be resolved safely. Do not make destructive changes.
+9. **No false “institutional-grade” claims.** Use “institutional-style” only to describe rigor, architecture, validation, controls, reproducibility, and observability—not certifications or actual institutional capability.
+10. **Do not assume the user's deployment target.** Determine from the source files and project context whether Linux, Android/Termux ARM64, desktop, or multiple targets are relevant. Preserve portability and document tested targets.
+
+---
+
+# 1. PRIMARY MISSION
+
+Upgrade the 37 existing skills into a cohesive hybrid capability framework using:
+
+- Python for AI/ML, orchestration, research, strategy, data workflows, configuration, and broad ecosystem integration.
+- Rust for performance-sensitive, deterministic, numerically intensive, concurrency-sensitive, or memory-sensitive components where benchmark evidence justifies it.
+- A clean Python–Rust boundary using appropriate technologies such as PyO3 and maturin where suitable.
+- Robust, measurable, maintainable, testable, auditable implementations.
+- A unified set of skill standards, shared contracts, references, test protocols, and examples.
+- Safe demo-only trading and research workflows.
+
+Do not rewrite all skills with identical generic content. Each skill must remain specialized, deeply useful, and aware of its domain.
+
+---
+
+# 2. PHASE 0 — ARCHIVE INVENTORY AND BASELINE
+
+Start by extracting the provided V2 archive into a new workspace. If it contains a nested ZIP, identify and extract it safely. Never overwrite the original.
+
+Produce:
+- `V2_INVENTORY.md`: archive tree, all 37 skill names (verify actual count), file sizes, references, scripts, tests, metadata, and duplicate/empty/missing-file findings.
+- `V2_BASELINE.md`: baseline test/build results, existing capabilities, weaknesses, compatibility observations, and known issues.
+- `V3_TRACEABILITY.md`: mapping from each original skill/file to its V3 destination and planned upgrade.
+- A checksum manifest for original files where tooling is available.
+
+If the stated count of 37 is incorrect, report the verified count and investigate; do not force the count.
+
+Baseline testing must be safe and must not use real exchange credentials or live trading. Do not run unsafe scripts without inspection.
+
+---
+
+# 3. ARCHITECTURE — HYBRID PYTHON + RUST
+
+Create a coherent architecture and write `docs/HYBRID_ARCHITECTURE.md`.
+
+## Python responsibilities
+- AI/LLM integration and reasoning (never treat model output as trusted executable instructions).
+- Multi-agent orchestration, task routing, research workflows, and agent memory/context handling.
+- Strategy design, feature selection, model training, evaluation, and experiment management.
+- Exchange/API orchestration, configuration, data coordination, and non-critical glue.
+- Portfolio/research workflows, reports, backtest orchestration, and analytics.
+- Python reference implementations for numerical functions shared with Rust.
+- Compatibility fallback for Rust features when a tested fallback exists.
+
+## Rust responsibilities — only when justified
+- Parallel market screening and CPU-heavy ranking/filtering.
+- Deterministic indicator and rolling-statistic kernels.
+- Order-book feature aggregation and imbalance calculations.
+- Numerical feature generation, correlation, volatility, and statistics.
+- Performance-critical backtesting/event simulation kernels, after correctness is established.
+- Reusable high-throughput processing with clear memory and concurrency bounds.
+- Selected deterministic risk calculations, but never the sole security boundary or permission to execute orders.
+
+## Python–Rust bridge
+Evaluate and use an appropriate binding approach, typically:
+- PyO3 + maturin for native Python extension modules.
+- Rust crate structure with clear public APIs.
+- Typed, validated inputs and outputs.
+- Batch-oriented calls to amortize FFI overhead.
+- Avoid excessive Python↔Rust crossings for individual tiny operations.
+- Explicit error mapping and panic containment.
+- Never allow a Rust panic to unwind unsafely across FFI.
+- Define version/compatibility expectations.
+- Minimize copies where safe; never sacrifice correctness or isolation for “zero-copy” claims.
+
+## Architecture design requirements
+- Define module ownership, dependency direction, interface contracts, data schemas, error semantics, lifecycle, concurrency, resource limits, and fallback policy.
+- Keep interfaces stable and documented.
+- Avoid circular dependencies.
+- Prefer simple, maintainable modules over premature microservices.
+- Do not introduce network services between Python and Rust when in-process bindings are appropriate.
+- Document when Python-only is preferable.
+- Use diagrams (Mermaid where supported) and explain critical paths.
+
+Suggested project structure (adapt to actual package layout; do not blindly force it):
+
+hybrid_quant_v3/
+  skills/
+    <all existing skill folders, upgraded in place in the V3 copy>
+    rust-high-performance-engineering/
+    python-rust-hybrid-architecture/
+    cross-language-numerical-parity/
+    async-concurrency-event-driven/
+    arm64-mobile-native-engineering/
+  python/
+    core/
+    ai/
+    agents/
+    strategy/
+    research/
+    risk/
+    exchange/
+    data/
+  rust/
+    core_engine/
+      src/
+        scanner/
+        indicators/
+        statistics/
+        correlation/
+        volatility/
+        orderbook/
+        backtest/
+        risk_calculations/
+  bridge/
+  tests/
+    python/
+    rust/
+    parity/
+    integration/
+    property/
+    stress/
+    security/
+  benchmarks/
+  docs/
+  scripts/
+  reports/
+
+Modify this structure to fit the actual skills ecosystem and explain deviations.
+
+---
+
+# 4. PERFORMANCE ENGINEERING — BENCHMARK FIRST, RUST ONLY WHEN IT WINS
+
+For each candidate hot path:
+1. Profile the current implementation.
+2. Establish realistic representative inputs and workload.
+3. Benchmark Python baseline using repeatable methodology.
+4. Implement Rust only if the expected benefit justifies complexity.
+5. Benchmark Rust and end-to-end hybrid performance, including bridge overhead.
+6. Validate exact/approximate numerical semantics and output contract.
+7. Record results, environment, sample size, warm-up, median, p95/p99 where meaningful, throughput, memory, and variance.
+8. Retain Python implementation as reference; fallback only where feature parity is verified.
+
+Do not fabricate speedups. Do not benchmark only toy inputs. Avoid optimizations that worsen total latency, memory, maintainability, energy use, or correctness.
+
+Candidate Rust modules:
+- Multi-symbol screening, filters, and ranking.
+- Batch indicator calculation.
+- Rolling windows and incremental statistics.
+- Volatility and correlation updates.
+- Order-book feature extraction.
+- Anomaly feature calculation.
+- Portfolio/statistical kernels.
+- Event-driven backtest hot loops.
+- Data transformations and serialization only if profiling shows bottlenecks.
+
+Avoid Rust for:
+- Small one-off operations.
+- I/O-bound API waiting where network latency dominates.
+- AI prompting/LLM reasoning.
+- Logic that increases integration risk without measurable benefit.
+
+---
+
+# 5. RUST ENGINEERING STANDARD
+
+New or modified Rust code must follow professional engineering practices:
+
+- Stable Rust unless a feature requires otherwise and is documented.
+- Idiomatic ownership, borrowing, lifetimes, and explicit resource management.
+- No unnecessary unsafe code. Any `unsafe` must be minimal, justified, documented, and reviewed.
+- Avoid unbounded threads, queues, caches, memory growth, and task spawning.
+- Validate inputs, sizes, ranges, timestamps, and assumptions.
+- Use typed errors; avoid panic-based control flow.
+- Catch/contain panics at appropriate FFI boundaries.
+- Keep deterministic functions deterministic.
+- Prefer measured parallelism and batching.
+- Consider CPU architecture, compiler settings, reproducible builds, and target compatibility.
+- Use formatting, linting, static analysis, and tests where available (`cargo fmt`, `cargo clippy`, `cargo test`).
+- Check dependency licenses, known vulnerabilities, maintenance, and unnecessary transitive dependencies.
+- Document compiler/toolchain and build steps.
+
+Do not use unsafe memory manipulation, SIMD, lock-free structures, or specialized optimization merely to appear advanced. Add them only when justified and tested.
+
+---
+
+# 6. PYTHON ENGINEERING STANDARD
+
+Python upgrades must include:
+- Type hints for public APIs.
+- Clear interfaces and docstrings.
+- Structured errors and validated configuration.
+- Async design where it genuinely improves I/O/concurrency.
+- Explicit timeouts, retry limits, exponential backoff with jitter, and cancellation handling.
+- Rate-limit-aware scheduling.
+- No blocking work on async event loop.
+- Bounded task concurrency and backpressure.
+- Safe resource cleanup.
+- No silent exception swallowing.
+- No secrets in logs or reports.
+- Reproducible environments and dependency constraints.
+- Formatting/linting/type-checking as appropriate.
+- Tests for behavior and edge cases.
+
+Do not blindly convert all code to async or add a framework without a clear need.
+
+---
+
+# 7. UPGRADE ALL EXISTING SKILLS — SPECIALIZED, NOT GENERIC
+
+Inspect and upgrade every original skill. Preserve its purpose and terminology while adding the following relevant sections as appropriate:
+
+1. Skill mission and scope.
+2. Activation/use cases and when NOT to use the skill.
+3. Inputs, outputs, assumptions, and data contracts.
+4. Decision workflow and step-by-step operational procedure.
+5. Python best practices and applicable code patterns.
+6. Rust acceleration opportunities with criteria—not mandatory Rust.
+7. Integration with other skills, including dependency/hand-off rules.
+8. Safety, failure modes, and fallback.
+9. Testing, verification, and benchmark expectations.
+10. Anti-patterns, limitations, and evidence standards.
+11. Examples and actionable checklists.
+12. References to shared V3 architecture docs.
+
+Do not bloat every SKILL.md with unrelated Rust details. Keep each skill focused and link to shared references. Preserve old V2 content in a reference/history location or migration notes so provenance is clear. Do not copy entire shared documents into every skill.
+
+## Skill integration matrix
+Map all actual skills and decide their upgrade individually. Include at least:
+- advanced-risk-management
+- statistical-arbitrage
+- backtesting-optimization
+- multi-agent-orchestration
+- trade-performance-intelligence
+- execution-algorithm
+- market-regime-detection
+- multi-coin-scanner
+- okx-api-execution
+- termux-deployment-engineering
+- predictive-modeling
+- python-engineering-debugging
+- quantitative-market-analysis
+- smart-money-analysis
+- portfolio-optimization
+- performance-optimization
+- coin-correlation-analysis
+- ai-decision-validation
+- reinforcement-learning-lab
+- algorithmic-strategy-engineering
+- continuous-okx-demo-trading
+- self-healing-engineering
+- reversal-detection
+- volatility-intelligence
+
+These names are examples drawn from prior package inventory and are not a substitute for inventory. Upgrade every skill actually found in the archive, including skills not listed above.
+
+---
+
+# 8. ADD FIFTEEN SPECIALIZED SKILLS (38–52; ONLY IF THEY DO NOT ALREADY EXIST)
+
+Add and fully implement these skills if equivalent skills are not already present. Avoid duplicate skill names or duplicate capabilities. If an existing skill covers one, strengthen it and document that it fulfills the requirement.
+
+## Skill 38 — Rust High-Performance Engineering
+Focus:
+- Profiling-driven optimization.
+- Rust fundamentals for quant systems.
+- CPU/memory/throughput/latency measurements.
+- Concurrency, bounded parallelism, cache behavior.
+- Benchmark methodology.
+- Correctness-first optimization.
+- FFI safety and panic containment.
+- ARM64 and cross-compilation awareness.
+- Code review and anti-patterns.
+
+## Skill 39 — Python–Rust Hybrid Architecture
+Focus:
+- PyO3/maturin integration.
+- Stable interface contracts.
+- Batch data transfer and minimizing FFI overhead.
+- Input/output schemas and typed errors.
+- Packaging, build, import, fallback, and version compatibility.
+- Native module testing and integration patterns.
+- Selecting Python-only versus hybrid design.
+
+## Skill 40 — Cross-Language Numerical Parity
+Focus:
+- Python reference implementation.
+- Rust parity and differential testing.
+- Floating-point precision, rounding, NaN/Inf, missing data, and boundary semantics.
+- Property-based and randomized tests.
+- Deterministic seeds.
+- Explicit tolerance by function.
+- Reject parity failures from performance promotion.
+
+## Skill 41 — Async Concurrency & Event-Driven Systems
+Focus:
+- Python asyncio and Rust Tokio where relevant.
+- Bounded queues, backpressure, cancellation, timeouts, rate limits.
+- Task supervision, shutdown, retries, jitter, resource limits.
+- Avoiding race conditions and duplicated processing.
+- Event-driven data pipelines and resilience.
+- Use only where concurrency is useful.
+
+## Skill 42 — ARM64 / Android / Termux Native Engineering
+Focus:
+- Android ARM64 compatibility.
+- Termux and Linux environment differences.
+- Native Rust compilation, target triples, ABI and linking.
+- Python native module packaging.
+- Dependency compatibility.
+- Memory, CPU, battery, and thermal constraints.
+- Background process limitations and deployment tests.
+- Clear distinction between supported, theoretically buildable, and actually tested targets.
+
+
+## Add Skills 43–52 — Quant Intelligence, Data, Execution, and Defense
+Add these ten skills only after checking the actual inventory for overlap. If a capability already exists, upgrade that skill to fulfill the specification and record the mapping; do not create duplicate skills. Each skill must be independently actionable, include workflow, interfaces, tests, failure modes, integration points, examples, and references. Keep SKILL.md focused and link to shared documentation.
+
+
+## Skill 43 — Market Microstructure & Liquidity Intelligence
+Focus:
+- Bid/ask spread, depth, liquidity, order-book imbalance, liquidity dynamics, and market quality.
+- Slippage estimation inputs, thin markets, spread expansion, liquidity gaps, and execution feasibility.
+- Distinguish observed order-book data from inferred metrics; define freshness and sampling limits.
+- Explain features and scores, avoid opaque or unsupported claims.
+- Integrate with scanner, order-flow, volatility, regime, and execution skills.
+- Rust acceleration only for profiled, deterministic hot paths; Python remains research/orchestration layer.
+
+## Skill 44 — Quant Data Engineering & Data Integrity
+Focus:
+- Market data ingestion, normalization, timestamps, symbol/instrument metadata, schema contracts, and provenance.
+- Missing, duplicate, stale, malformed, out-of-order, and corrupted data detection and handling.
+- Candle continuity, timezone/time synchronization, resampling correctness, and exchange-specific semantics.
+- Data validation, quality scoring, safe quarantine/rejection, caching, versioning, and reproducible datasets.
+- Avoid look-ahead leakage, survivorship bias, and accidental mixing of datasets or market types.
+- Bounded queues, retry limits, rate limits, observability, and graceful degradation.
+
+## Skill 45 — Quant Experiment & Research Reproducibility
+Focus:
+- Research hypothesis, experiment plans, baseline/control, experiment IDs, configs, data version, code revision, seeds, and result tracking.
+- Reproducible research and avoiding duplicate experiments.
+- Parameter search discipline, multiple-testing awareness, and clear experiment stopping rules.
+- Record negative results and failed experiments; never cherry-pick only winning runs.
+- Build comparison reports and maintain a research decision log.
+- Coordinate backtests, ML evaluations, walk-forward studies, and strategy promotion criteria.
+
+## Skill 46 — Quant Feature Engineering & Feature Store
+Focus:
+- Reusable feature definitions, schema/versioning, provenance, validation, and feature lifecycle.
+- Feature computation across candles, volume, volatility, order book, regime, and other permitted inputs.
+- Normalization, missing values, feature stability, redundancy, selection, and monitoring.
+- Leakage checks and strict point-in-time feature availability.
+- Batch/incremental computation and Python/Rust parity where appropriate.
+- Avoid feature proliferation and validate incremental updates against full recomputation.
+
+## Skill 47 — Model Governance & Prediction Calibration
+Focus:
+- Model validation, calibration, uncertainty, reliability, confidence interpretation, and decision thresholds.
+- Drift, degradation, monitoring, retraining triggers, model versioning, and rollback.
+- Model/data lineage, limitations, bias checks, and reproducible evaluation.
+- Distinguish probability estimates from scores; do not let uncalibrated confidence authorize trades.
+- Define abstention/NO TRADE when uncertainty, data quality, or model reliability is insufficient.
+- Evaluate chronological out-of-sample and regime-separated performance.
+
+## Skill 48 — Portfolio Construction & Capital Allocation
+Focus:
+- Risk-budgeting, constrained allocations, concentration limits, diversification, correlated exposure, and strategy-level capital allocation.
+- Robust portfolio objectives and realistic constraints; evaluate unstable optimization outputs.
+- Position sizing and exposure consistency with independent risk limits.
+- Sensitivity, scenario, and stress analysis; avoid relying on unstable covariance estimates.
+- Communicate assumptions and uncertainty; optimization output is not execution permission.
+- Connect portfolio optimization, correlation, risk, strategy, and execution modules.
+
+## Skill 49 — Market Impact & Transaction Cost Modeling
+Focus:
+- Fees, spread, slippage, funding, market impact, latency, partial fills, and liquidity-dependent execution costs.
+- Backtest realism, conservative assumptions, sensitivity analysis, and cost attribution.
+- Distinguish observed costs from estimates and avoid false precision.
+- Model execution cost across size, liquidity, volatility, and order type only where data supports it.
+- Integrate with backtesting, execution algorithms, microstructure, and trade performance analytics.
+- Prevent strategy promotion based on unrealistic cost-free backtests.
+
+## Skill 50 — Event-Driven & Macro Intelligence
+Focus:
+- Time-sensitive news, economic calendar, macro releases, exchange events, funding/settlement events, and volatility catalysts.
+- Source provenance, timestamp, confidence, relevance, and cross-source verification.
+- Event risk windows, scenario mapping, market impact hypotheses, and uncertainty.
+- Separate factual event extraction from interpretation and prediction.
+- Avoid treating unverified headlines, social posts, or LLM-generated summaries as truth.
+- Integrate with market regime, volatility, data integrity, risk, and strategy without bypassing risk controls.
+
+## Skill 51 — Trading System Observability & Incident Intelligence
+Focus:
+- Structured logs, metrics, traces, latency, API health, data freshness, queue depth, task health, and order lifecycle monitoring.
+- Detect missed events, stale streams, duplicate processing, state divergence, unexpected exposure, and anomalous behavior.
+- Alert severity, actionable diagnostics, incident timeline, evidence capture, and postmortems.
+- Resource monitoring and bounded telemetry; redact credentials and sensitive data.
+- Recovery/runbooks, reconciliation, and safe shutdown.
+- Distinguish alerting from automatic action; recovery actions must be constrained and tested.
+
+## Skill 52 — AI Adversarial Security & Trading System Defense
+Focus:
+- Prompt injection, malicious/untrusted research content, data poisoning, and tool-output attacks.
+- Agent least privilege, permission boundaries, secret handling, secure tool invocation, and audit trails.
+- Dependency/supply-chain risk, integrity checks, configuration hardening, and vulnerability triage.
+- Validate all AI-generated commands, code, strategies, and configuration before execution or integration.
+- Prevent untrusted inputs from altering demo/live mode, risk settings, credentials, or execution permissions.
+- Threat modeling, adversarial tests, safe containment, and incident response.
+- Demo-only scope; no secret exposure, unsafe shell execution, or live-trading enablement.
+
+
+## TOTAL SKILL TARGET AND OVERLAP POLICY
+The target capability count is 52 (37 original + 15 added, numbered 38–52), but verify the source inventory first. If original skills already cover one or more additions, do not duplicate them: strengthen the existing skill and report the verified final count and capability mapping. The package must prioritize skill quality, routing, deep references, and interoperability over a rigid count.
+
+
+---
+
+# 9. QUANT RESEARCH QUALITY — REALISTIC AND SCIENTIFIC
+
+Strengthen relevant skills to use rigorous research workflows:
+
+- Hypothesis before strategy changes.
+- Baseline and control strategy comparisons.
+- Train/validation/test split with chronological order.
+- Walk-forward evaluation.
+- Out-of-sample testing.
+- Purging/embargo where leakage risk exists.
+- Survivorship-bias awareness.
+- Look-ahead bias prevention.
+- Data snooping and multiple-testing awareness.
+- Realistic fees, spread, slippage, funding, latency, liquidity, partial fills, and order constraints.
+- Regime-aware performance analysis.
+- Robustness testing across time, assets, and parameter ranges.
+- Confidence intervals or uncertainty analysis where appropriate.
+- Statistical significance must not be confused with economic significance.
+- Report sample size and limitations.
+- Avoid overfitting and fragile parameter optimization.
+- Maintain reproducible experiment IDs, configs, seeds, data versions, and results.
+- Include benchmark strategy and no-trade baseline.
+- ML models must be calibrated and monitored; reject unverified model outputs.
+
+No strategy should be called profitable based only on one backtest or one favorable market regime. Never manufacture alpha claims.
+
+---
+
+# 10. MARKET DATA, SCANNING, AND SIGNAL PIPELINE
+
+Improve scanner and data skills with a robust pipeline:
+
+- Data source validation and timestamp normalization.
+- Stale data detection.
+- Missing candles and duplicate handling.
+- Symbol metadata and contract rules.
+- Liquidity and spread filters.
+- Volume, volatility, trend, momentum, order-book, and market regime features.
+- Bounded concurrency and exchange rate limits.
+- Prioritization and cache invalidation.
+- Incremental computation.
+- Feature freshness and provenance.
+- Ranking transparency and explainability.
+- Separate market eligibility from strategy signal generation.
+- Separate signal score from order authorization.
+- Graceful degradation and clear telemetry.
+
+Do not claim that more coins scanned automatically improves trading outcomes. Use a staged pipeline to reduce noise and protect API quotas.
+
+---
+
+# 11. RISK MANAGEMENT — INDEPENDENT, HARD, AND FAIL-CLOSED
+
+Strengthen risk-related skills and contracts:
+
+- Per-trade risk budget.
+- Position and leverage limits.
+- Exposure limits by symbol, asset, strategy, and correlated group.
+- Portfolio concentration controls.
+- Daily loss and drawdown thresholds.
+- Volatility-adjusted sizing with conservative caps.
+- Liquidation distance and margin safety checks.
+- Maximum concurrent positions.
+- Maximum order size and order frequency.
+- Stale-data and abnormal-market protection.
+- Slippage/spread guard.
+- Duplicate-order/idempotency controls.
+- Exchange precision and minimum-size checks.
+- Kill switch and emergency stop.
+- Position/order reconciliation.
+- Explicit order lifecycle state machine.
+- Fail-closed behavior for unknown state.
+- Risk decision audit trail.
+
+Risk must be enforced by deterministic controls, not by asking an AI agent whether it “feels safe.” Strategy agents cannot override risk limits. Rust risk kernels may calculate values but must not become a bypass around independent permission checks.
+
+---
+
+# 12. OKX DEMO-ONLY API AND EXECUTION
+
+Audit and strengthen OKX-specific skills without enabling live execution.
+
+- Explicit demo environment configuration and verification.
+- Separate demo credentials and environment indicators.
+- Reject live credentials/configuration in demo workflow.
+- Never print API secrets.
+- Validate instrument metadata, tick size, lot size, contract value, margin and product type.
+- Handle rate limits, timeout, DNS/TLS, disconnects, retries, and exchange errors.
+- WebSocket reconnect, resubscription, heartbeat, stale-stream detection.
+- REST/WebSocket state reconciliation.
+- Order idempotency and client IDs.
+- Order states: submitted, acknowledged, partially filled, filled, canceled, rejected, unknown, etc.
+- Unknown status requires reconciliation—not blind retry.
+- Retry only safe/idempotent operations.
+- Reduce-only/close behavior must be verified against exchange rules and current API.
+- Never automatically escalate from demo to live.
+- Tests must mock or use demo endpoints only; inspect test fixtures for accidental live URLs.
+
+---
+
+# 13. MULTI-AGENT COORDINATION AND AUTONOMOUS WORK
+
+Upgrade orchestration skills so agents can work in parallel without unsafe file conflicts.
+
+Suggested logical roles (adapt to actual orchestration capabilities):
+- Agent A: Market Data, Scanner, Data Quality, Market Intelligence.
+- Agent B: Quant Research, Strategy, ML, Backtesting.
+- Agent C: Risk, Portfolio, Execution, OKX Demo Safety.
+- Agent D: Architecture, Integration, Rust Performance, QA, Security.
+
+Rules:
+- Tasks must be decomposed into independent work packages.
+- Each task includes owner, files/modules, interfaces, dependencies, acceptance criteria, test commands, and expected artifacts.
+- Parallelize independent research, reviews, and test work.
+- Avoid simultaneous writes to the same files.
+- Shared interfaces/contracts are defined first.
+- Integrator owns merge and conflict resolution.
+- Agents do not wait for other agents when their work has no dependency.
+- Do not allow agent output to override safety constraints.
+- Review other agents’ changes critically.
+- Preserve working checkpoints and status files.
+- If multi-agent tools are unavailable, simulate the workflow sequentially with explicit role separation—do not falsely claim multiple agents actually ran.
+
+Create/update:
+- `AGENT_ROLES.md`
+- `WORK_PACKAGES.md`
+- `INTEGRATION_RULES.md`
+- `PROGRESS.md`
+- `DECISION_LOG.md`
+
+---
+
+# 14. PERFORMANCE BENCHMARKS AND REPORTING
+
+Build reproducible benchmarks for applicable modules. Use representative sizes, such as small/medium/large batches and realistic candle/symbol counts; choose workload sizes based on the actual bot and environment.
+
+Report:
+- Hardware, OS, Python version, Rust version, compiler, build mode, and dependency versions.
+- Dataset shape and characteristics.
+- Warm-up and repetition counts.
+- Baseline Python median and dispersion.
+- Rust kernel median and dispersion.
+- End-to-end hybrid time including conversion/FFI.
+- Throughput and latency percentiles where meaningful.
+- Peak memory and CPU use when tools permit.
+- Accuracy/parity result.
+- Benchmark limitations.
+- Reproduction commands.
+
+Do not compare debug Rust with optimized Python or use inconsistent datasets. Do not state speedup unless calculated from valid comparable measurements. No benchmark result may be invented.
+
+Create:
+- `benchmarks/README.md`
+- Benchmark scripts.
+- Raw results where reasonable.
+- `reports/PERFORMANCE_REPORT.md`
+- Regression thresholds only where repeatability supports them.
+
+---
+
+# 15. TESTING, DEBUGGING, SECURITY, AND SELF-HEALING
+
+Follow a mandatory verification loop after each meaningful change:
+
+1. Inspect affected code and requirements.
+2. Form a hypothesis about the defect/improvement.
+3. Make a minimal, traceable change.
+4. Run targeted tests.
+5. Run broader tests.
+6. Lint/type-check/format as applicable.
+7. Test error and edge conditions.
+8. Review the diff for unintended changes.
+9. Record result and evidence.
+10. Continue without waiting for user approval unless blocked.
+
+Test categories:
+- Unit tests.
+- Integration tests.
+- Python–Rust parity tests.
+- Property/fuzz tests where feasible.
+- Regression tests.
+- Concurrency tests.
+- Fault injection.
+- API contract tests with mocks.
+- Demo integration tests.
+- Security/dependency tests.
+- Build/package/import tests.
+- ARM64/Termux tests only on actual compatible environments.
+
+Self-healing rules:
+- Automatically diagnose and repair ordinary code/test failures where safe.
+- Preserve original failure logs.
+- Never delete tests or weaken assertions merely to get green.
+- Never disable risk checks to bypass a failure.
+- Never retry a failing test indefinitely.
+- Use bounded repair attempts and then report unresolved blockers.
+- Separate code defects from environment limitations.
+- Do not claim self-healing succeeded without rerunning the failing test.
+
+---
+
+# 16. DOCUMENTATION AND SKILL QUALITY
+
+Create or update concise, useful documents:
+- `README.md` — package overview, installation, use, limitations.
+- `V3_CHANGELOG.md` — exact changes from V2.
+- `V2_INVENTORY.md`
+- `V2_BASELINE.md`
+- `V3_TRACEABILITY.md`
+- `docs/HYBRID_ARCHITECTURE.md`
+- `docs/PYTHON_RUST_BRIDGE.md`
+- `docs/RUST_ENGINE_GUIDE.md`
+- `docs/ARM64_TERMUX_GUIDE.md`
+- `docs/QUANT_RESEARCH_PROTOCOL.md`
+- `docs/RISK_AND_DEMO_SAFETY.md`
+- `docs/TESTING_AND_BENCHMARKING.md`
+- `docs/DEPENDENCY_AND_SECURITY_AUDIT.md`
+- `AGENT_ROLES.md`
+- `WORK_PACKAGES.md`
+- `INTEGRATION_RULES.md`
+- `PROGRESS.md`
+- `DECISION_LOG.md`
+- `reports/FINAL_AUDIT.md`
+- `reports/PERFORMANCE_REPORT.md`
+
+Avoid empty templates or superficial documents. Documents must reflect actual implementation and results. If a section is not completed, mark it clearly.
+
+---
+
+# 17. DEPENDENCY, SECURITY, AND SUPPLY-CHAIN AUDIT
+
+Audit:
+- Python dependencies.
+- Rust crates.
+- License compatibility.
+- Known vulnerability reports if tools/network are available.
+- Maintainer activity and dependency necessity.
+- Reproducible/pinned builds.
+- Lockfiles.
+- Secret handling.
+- API key leakage in code/logs.
+- Unsafe deserialization.
+- Untrusted LLM outputs.
+- Shell command execution paths.
+- Prompt injection and data poisoning risks in research inputs.
+- Excessive permissions.
+- Supply-chain risk.
+
+Do not silently install packages globally. Use project-local environments where feasible. If offline, clearly state which audits could not be completed.
+
+---
+
+# 18. MIGRATION AND COMPATIBILITY
+
+Create a V2 → V3 migration guide.
+
+- Keep V2 package untouched.
+- Document new files and renamed paths.
+- Identify breaking changes, if any.
+- Provide migration steps.
+- Preserve original reference content.
+- Provide Python-only fallback instructions where applicable.
+- Provide Rust build/install steps.
+- Include Termux-specific steps only after verifying compatibility.
+- Keep skill loading conventions compatible with the target AI coding platform. Verify required frontmatter, naming, folder layout, and activation semantics from actual skill format; do not invent platform rules.
+
+If a hybrid module cannot be built on a target device, skill instructions should remain usable and clearly explain the fallback.
+
+---
+
+# 19. EXECUTION PLAN — COMPLETE ALL PHASES AUTONOMOUSLY
+
+## Phase 0 — Inspect and baseline
+Inventory archive, extract to a safe workspace, verify skill count, inspect file structure, run baseline tests safely, record findings.
+
+## Phase 1 — Architecture and contracts
+Define hybrid architecture, skill standards, interface contracts, error model, safety model, concurrency/resource limits, and traceability before broad implementation.
+
+## Phase 2 — Skill upgrades
+Upgrade each original skill individually. Preserve its focus. Add relevant Python/Rust/hybrid instructions, workflow, integrations, safety, testing, and references.
+
+## Phase 3 — Five specialized skills
+Add/upgrade all 15 capabilities numbered 38–52 (or merge with equivalent existing skills after a documented overlap assessment). Ensure each capability is complete and usable; verify the final count rather than forcing 52 folders.
+
+## Phase 4 — Python/Rust reference engine
+Implement a small but real set of useful, benchmarkable kernels, selected after profiling and architecture review. Prioritize correctness and maintainability. Avoid building an unnecessarily huge engine. Provide Python references and typed interfaces.
+
+## Phase 5 — Integration
+Build bindings where environment allows; add parity and integration tests; implement verified fallback; document packaging.
+
+## Phase 6 — Testing and security
+Run the complete available suite, lint, type checks, build, dependency/security audit, demo-safety audit, and regression tests. Fix defects and rerun.
+
+## Phase 7 — Benchmarking
+Measure Python baseline, Rust kernel, and hybrid end-to-end overhead. Publish only measured results.
+
+## Phase 8 — Documentation and packaging
+Complete docs, migration guide, manifests, installation instructions, examples, changelog, and reports. Package V3 without overwriting V2.
+
+## Phase 9 — Final audit
+Verify:
+- Original skill count and provenance.
+- All skills upgraded or documented as intentionally unchanged.
+- New skills present without duplication.
+- Skill metadata/format valid.
+- No empty, truncated, malformed, or broken references.
+- Python and Rust builds/tests status.
+- Python/Rust parity.
+- Demo-only safety.
+- Dependency and security findings.
+- Benchmark evidence.
+- Package can be extracted and opened.
+- ZIP integrity test passes.
+
+Do not stop merely because a plan or architecture document is written. Deliver the finished artifact or report blockers honestly.
+
+---
+
+# 20. FINAL ACCEPTANCE CRITERIA
+
+V3 is ready to deliver only when:
+
+- [ ] Original V2 archive remains untouched.
+- [ ] V3 workspace created from actual source.
+- [ ] All original skills inventoried and mapped.
+- [ ] All existing skills reviewed and individually upgraded where appropriate.
+- [ ] All 15 added capabilities (38–52) implemented or integrated into existing skills without duplication; final verified skill count and mapping reported.
+- [ ] Python and Rust responsibilities documented.
+- [ ] Hybrid interface and error contracts documented.
+- [ ] Rust implementation contains actual code—not empty placeholders—where feasible.
+- [ ] Python reference implementation exists for parity-critical kernels.
+- [ ] Rust build attempted and results recorded.
+- [ ] Python tests run and results recorded.
+- [ ] Rust tests run and results recorded.
+- [ ] Parity tests run and results recorded.
+- [ ] Performance benchmarks run with reproducible methodology, or marked NOT RUN.
+- [ ] Safety and demo-only checks reviewed.
+- [ ] Dependency/security audit performed to the extent environment allows.
+- [ ] ARM64/Termux status verified or marked untested.
+- [ ] Documentation and migration guide completed.
+- [ ] No fabricated claims, metrics, or passing tests.
+- [ ] ZIP package created and integrity-tested.
+- [ ] Final report states remaining limitations and next priorities.
+
+---
+
+# 21. FINAL DELIVERABLES
+
+Deliver a new package named similar to:
+
+`OKX_HYBRID_QUANT_INTELLIGENCE_V3_52_SKILLS_PYTHON_RUST.zip`
+
+Include:
+1. Upgraded original skills.
+2. Fifteen specialized capabilities numbered 38–52 (or documented equivalent integration without duplicates).
+3. Python reference/core framework.
+4. Rust engine source and bindings if implemented.
+5. Tests and benchmark code.
+6. Installation/build instructions.
+7. Architecture and research/risk docs.
+8. V2 inventory, baseline, traceability, changelog, and migration guide.
+9. Final audit report.
+10. Benchmark report containing measured results only.
+11. Build/test status and known limitations.
+
+At completion, give the user:
+- Download path/link to the V3 ZIP.
+- Verified skill count.
+- Summary of major improvements.
+- Exact test/build results (pass/fail/not run).
+- Actual measured performance comparisons or explicitly state none were measured.
+- Security/dependency audit summary.
+- ARM64/Termux compatibility status.
+- Remaining blockers/limitations.
+- Recommended next steps for safely using the skills in the OKX demo bot.
+
+---
+
+# 22. OPERATING PRINCIPLE
+
+Think like a disciplined quantitative research and engineering organization—not a prompt generator.
+
+Prefer:
+- Evidence over confidence.
+- Correctness over speed.
+- Measured performance over claims.
+- Modular architecture over complexity.
+- Risk controls over aggressive execution.
+- Reproducibility over undocumented experimentation.
+- Real tests over checklists that were not executed.
+- Safe autonomous progress over repeated approval requests.
+- Transparent limitations over pretending to be institutional.
+
+Begin with Phase 0 now. Inspect the provided V2 archive thoroughly, preserve it, create the V3 workspace, and execute the full upgrade workflow through final verification and packaging.
